@@ -1057,22 +1057,23 @@ listeClose.addEventListener('click', () => {
   listePanel.classList.remove('open');
   document.getElementById('listePanelOverlay').classList.remove('open');
 });
-// Protection ghost click iOS — principe fondamental :
-// un vrai tap génère TOUJOURS touchend sur l'élément cliqué avant le click.
-// un ghost click (clic fantôme iOS) génère un click SANS touchend sur ce bouton.
-// → on n'ouvre le panel que si touchend a été détecté sur CE bouton.
+// Ouverture du panel — géré via touchend (mobile) + click (desktop)
+// Sur iOS, appeler preventDefault() sur touchend empêche iOS de générer
+// le click natif 300ms plus tard → pas de ghost click possible.
 const openListeBtn = document.getElementById('openListeBtn');
-let _btnTouchEndFired = false;
-openListeBtn.addEventListener('touchend', () => {
-  _btnTouchEndFired = true;
-  setTimeout(() => { _btnTouchEndFired = false; }, 600);
-}, { passive: true });
-openListeBtn.addEventListener('click', () => {
-  // Appareil tactile : touchend doit avoir précédé ce click sur CE bouton
-  if (navigator.maxTouchPoints > 0 && !_btnTouchEndFired) return;
-  _btnTouchEndFired = false;
-  // Sécurité supplémentaire : barre de recherche active = ghost click
+
+openListeBtn.addEventListener('touchend', (e) => {
+  e.preventDefault(); // annule le click natif iOS → supprime à la source le ghost click
   if (document.activeElement === searchInput) return;
+  listePanel.classList.add('open');
+  document.getElementById('listePanelOverlay').classList.add('open');
+  syncPanelToViewport();
+}, { passive: false }); // passive:false obligatoire pour pouvoir appeler preventDefault
+
+openListeBtn.addEventListener('click', () => {
+  // Sur mobile ce click n'arrive jamais (annulé par touchend+preventDefault ci-dessus)
+  // Sur desktop (souris) il n'y a pas de touchend → ce click est légitime
+  if ('ontouchstart' in window) return; // mobile : ignoré, déjà géré par touchend
   listePanel.classList.add('open');
   document.getElementById('listePanelOverlay').classList.add('open');
   syncPanelToViewport();
