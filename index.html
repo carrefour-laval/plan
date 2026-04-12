@@ -1057,19 +1057,22 @@ listeClose.addEventListener('click', () => {
   listePanel.classList.remove('open');
   document.getElementById('listePanelOverlay').classList.remove('open');
 });
-// Protection ghost click iOS — approche pointer-events :
-// quand la barre de recherche est touchée, le bouton est rendu physiquement incliquable
-// pendant 700ms, ce qui bloque tout clic fantôme quelle que soit sa cause.
+// Protection ghost click iOS — principe fondamental :
+// un vrai tap génère TOUJOURS touchend sur l'élément cliqué avant le click.
+// un ghost click (clic fantôme iOS) génère un click SANS touchend sur ce bouton.
+// → on n'ouvre le panel que si touchend a été détecté sur CE bouton.
 const openListeBtn = document.getElementById('openListeBtn');
-let _btnUnblockTimer = null;
-function _blockListeBtn() {
-  openListeBtn.style.pointerEvents = 'none';
-  clearTimeout(_btnUnblockTimer);
-  _btnUnblockTimer = setTimeout(() => { openListeBtn.style.pointerEvents = ''; }, 700);
-}
-searchInput.addEventListener('touchstart', _blockListeBtn, { passive: true });
-searchInput.addEventListener('focus', _blockListeBtn);
+let _btnTouchEndFired = false;
+openListeBtn.addEventListener('touchend', () => {
+  _btnTouchEndFired = true;
+  setTimeout(() => { _btnTouchEndFired = false; }, 600);
+}, { passive: true });
 openListeBtn.addEventListener('click', () => {
+  // Appareil tactile : touchend doit avoir précédé ce click sur CE bouton
+  if (navigator.maxTouchPoints > 0 && !_btnTouchEndFired) return;
+  _btnTouchEndFired = false;
+  // Sécurité supplémentaire : barre de recherche active = ghost click
+  if (document.activeElement === searchInput) return;
   listePanel.classList.add('open');
   document.getElementById('listePanelOverlay').classList.add('open');
   syncPanelToViewport();
