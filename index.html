@@ -225,7 +225,7 @@ body { font-family: 'Inter', system-ui, -apple-system, sans-serif; background-co
   .instruction { font-size: 0.72em; margin-bottom: 4px; width: 100%; text-align: center; }
   .nav-categories { gap: 3px; margin-bottom: 6px; flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
   .nav-categories::-webkit-scrollbar { display: none; }
-  .nav-pill { font-size: 0.44em; padding: 2px 4px; flex-shrink: 0; }
+  .nav-pill { font-size: 0.38em; padding: 1px 4px; flex-shrink: 0; }
   .search-input { font-size: 16px !important; padding: 9px 38px 9px 40px; min-height: 42px; }
   .search-clear { width: 26px; height: 26px; font-size: 0.85em; right: 10px; }
   .search-results { font-size: 0.78em; padding: 4px 8px 2px; min-width: 110px; }
@@ -1057,16 +1057,19 @@ listeClose.addEventListener('click', () => {
   listePanel.classList.remove('open');
   document.getElementById('listePanelOverlay').classList.remove('open');
 });
-// Protection ghost click iOS — un tap réel génère toujours un touchstart sur le bouton ;
-// un ghost click (tap fantôme après fermeture de l'autocomplete) n'en génère pas.
+// Protection ghost click iOS — approche pointer-events :
+// quand la barre de recherche est touchée, le bouton est rendu physiquement incliquable
+// pendant 700ms, ce qui bloque tout clic fantôme quelle que soit sa cause.
 const openListeBtn = document.getElementById('openListeBtn');
-let _btnLastTouch = 0;
-openListeBtn.addEventListener('touchstart', () => { _btnLastTouch = Date.now(); }, { passive: true });
+let _btnUnblockTimer = null;
+function _blockListeBtn() {
+  openListeBtn.style.pointerEvents = 'none';
+  clearTimeout(_btnUnblockTimer);
+  _btnUnblockTimer = setTimeout(() => { openListeBtn.style.pointerEvents = ''; }, 700);
+}
+searchInput.addEventListener('touchstart', _blockListeBtn, { passive: true });
+searchInput.addEventListener('focus', _blockListeBtn);
 openListeBtn.addEventListener('click', () => {
-  // Garde 1 : sur mobile, un vrai tap a toujours un touchstart sur CE bouton < 400ms avant
-  if (navigator.maxTouchPoints > 0 && Date.now() - _btnLastTouch > 400) return;
-  // Garde 2 : si la barre de recherche est active (clavier ouvert), ce clic est fantôme
-  if (document.activeElement === searchInput) return;
   listePanel.classList.add('open');
   document.getElementById('listePanelOverlay').classList.add('open');
   syncPanelToViewport();
