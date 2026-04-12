@@ -230,7 +230,7 @@ body { font-family: 'Inter', system-ui, -apple-system, sans-serif; background-co
   .search-clear { width: 26px; height: 26px; font-size: 0.85em; right: 10px; }
   .search-results { font-size: 0.78em; padding: 4px 8px 2px; min-width: 110px; }
   .autocomplete-dropdown { border-radius: 16px; }
-  .autocomplete-item { padding: 14px 16px; font-size: 1em; min-height: 52px; }
+  .autocomplete-item { padding: 7px 12px; font-size: 0.8em; min-height: 36px; }
   .open-liste-btn { font-size: 0.76em; padding: 6px 12px; border-radius: 14px; margin-bottom: 6px; min-height: 34px; }
   .search-wrapper { margin-bottom: 6px; }
   .magasin-container { border-radius: 10px; }
@@ -1063,8 +1063,10 @@ const openListeBtn = document.getElementById('openListeBtn');
 let _btnLastTouch = 0;
 openListeBtn.addEventListener('touchstart', () => { _btnLastTouch = Date.now(); }, { passive: true });
 openListeBtn.addEventListener('click', () => {
-  // Sur appareil tactile : si aucun touchstart récent (<400ms) sur CE bouton → ghost click, on ignore
+  // Garde 1 : sur mobile, un vrai tap a toujours un touchstart sur CE bouton < 400ms avant
   if (navigator.maxTouchPoints > 0 && Date.now() - _btnLastTouch > 400) return;
+  // Garde 2 : si la barre de recherche est active (clavier ouvert), ce clic est fantôme
+  if (document.activeElement === searchInput) return;
   listePanel.classList.add('open');
   document.getElementById('listePanelOverlay').classList.add('open');
   syncPanelToViewport();
