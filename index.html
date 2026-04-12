@@ -1,0 +1,1490 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1e3a8a">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Plan Carrefour">
+<title>Plan du Magasin Interactif</title>
+<style>
+html { scroll-behavior: smooth; }
+body { font-family: 'Inter', system-ui, -apple-system, sans-serif; background-color: #96C3FF; display: flex; flex-direction: column; align-items: center; padding: 40px 20px; margin: 0; }
+.page-title { margin-bottom: 4px; font-size: 1.3em; font-weight: 900; color: #1e3a8a; text-align: center; letter-spacing: 1px; text-transform: uppercase; }
+.instruction { margin-bottom: 12px; font-size: 0.85em; font-weight: 500; color: #1e3a8a; text-align: center; opacity: 0.8; }
+.nav-categories { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin-bottom: 14px; width: 100%; max-width: 1100px; }
+.nav-pill { text-decoration: none; padding: 5px 11px; border: 1.5px solid; border-radius: 20px; background-color: white; font-weight: 700; font-size: 0.78em; transition: all 0.25s ease; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+.nav-pill:hover { transform: translateY(-4px) scale(1.05); box-shadow: 0 8px 15px rgba(0,0,0,0.15); }
+.cat-maison { background-color: rgba(13,148,136,0.15) !important; border-color: rgba(13,148,136,0.4) !important; }
+.cat-technique { background-color: rgba(234,88,12,0.15) !important; border-color: rgba(234,88,12,0.4) !important; }
+.cat-habillement { background-color: rgba(124,58,237,0.15) !important; border-color: rgba(124,58,237,0.4) !important; }
+.cat-bebe { background-color: rgba(244,114,182,0.15) !important; border-color: rgba(244,114,182,0.4) !important; }
+.cat-liquides { background-color: rgba(37,99,235,0.15) !important; border-color: rgba(37,99,235,0.4) !important; }
+.cat-alimentaire { background-color: rgba(5,150,105,0.15) !important; border-color: rgba(5,150,105,0.4) !important; }
+.cat-loisirs { background-color: rgba(219,39,119,0.15) !important; border-color: rgba(219,39,119,0.4) !important; }
+.cat-animalerie { background-color: rgba(139,69,19,0.15) !important; border-color: rgba(139,69,19,0.4) !important; }
+.cat-beaute { background-color: rgba(192,38,211,0.15) !important; border-color: rgba(192,38,211,0.4) !important; }
+.cat-entretien { background-color: rgba(202,138,4,0.15) !important; border-color: rgba(202,138,4,0.4) !important; }
+:target { animation: flashTarget 2s ease-out; }
+@keyframes flashTarget { 0%{transform:scale(1);box-shadow:none} 20%{background-color:rgba(253,224,71,0.8)!important;transform:scale(1.05);box-shadow:0 0 15px rgba(253,224,71,0.8)} 80%{background-color:rgba(253,224,71,0.8)!important;transform:scale(1.05);box-shadow:0 0 15px rgba(253,224,71,0.8)} 100%{transform:scale(1);box-shadow:none} }
+.box:target { animation: flashTargetBox 2s ease-out; }
+@keyframes flashTargetBox { 0%{transform:scale(1)} 20%{background-color:#fef08a!important;transform:scale(1.05);box-shadow:0 0 15px rgba(253,224,71,0.8);border-color:#ca8a04!important} 80%{background-color:#fef08a!important;transform:scale(1.05);box-shadow:0 0 15px rgba(253,224,71,0.8);border-color:#ca8a04!important} 100%{transform:scale(1)} }
+.magasin-container { border: 3px solid #1e3a8a; border-radius: 16px; width: 900px; background-color: white; position: relative; box-shadow: 0 20px 40px rgba(30,58,138,0.1); overflow: visible; }
+.boucherie-ext-box { position: absolute; left: -68px; width: 65px; border: 3px solid #1e3a8a; border-right: none; border-radius: 10px 0 0 10px; background-color: #ffffff; z-index: 5; box-shadow: -4px 2px 12px rgba(30,58,138,0.12); display: flex; align-items: stretch; padding: 6px 6px 6px 8px; box-sizing: border-box; }
+.boucherie-ext-double { flex-direction: column; gap: 0; padding: 6px 6px 6px 8px; }
+.boucherie-ext-double .boucherie-vert-btn { flex: 1; }
+.ext-btn-separator { height: 1px; background-color: rgba(30,58,138,0.2); margin: 3px 2px; flex-shrink: 0; }
+.boucherie-vert-btn { flex: 1; writing-mode: vertical-rl; transform: rotate(180deg); display: flex; align-items: center; justify-content: center; padding: 8px 4px !important; border-radius: 6px !important; cursor: pointer; font-weight: 800; color: #1e3a8a; background-color: rgba(5,150,105,0.15) !important; border: 1px solid rgba(5,150,105,0.4) !important; transition: background-color 0.2s, color 0.2s !important; }
+.boucherie-vert-btn:hover { transform: rotate(180deg) !important; background-color: rgba(220,38,38,0.12) !important; border-color: rgba(220,38,38,0.4) !important; color: #dc2626 !important; }
+.header { text-align: center; font-weight: 800; font-size: 1.15em; border-bottom: 3px solid #1e3a8a; padding: 15px; letter-spacing: 3px; color: #1e3a8a; background-color: #f8fafc; border-radius: 13px 13px 0 0; }
+.main-layout { display: flex; }
+.gauche { width: 40%; border-right: 3px solid #1e3a8a; padding: 15px; display: flex; flex-direction: column; gap: 4px; position: relative; overflow: visible; }
+.droite { width: 60%; display: flex; flex-direction: column; }
+.droite-haut { padding: 15px 15px 0 15px; flex-grow: 1; }
+.droite-bas { padding: 15px; flex-grow: 1; border-top: 3px solid #1e3a8a; display: flex; flex-direction: column; justify-content: space-between; }
+.rayon { cursor: pointer; padding: 6px 10px; border-radius: 6px; transition: all 0.2s; font-weight: 800; font-size: 1.05em; color: #1e3a8a; border: 1px solid transparent; }
+.rayon:hover { background-color: rgba(220,38,38,0.15); color: #dc2626; transform: translateX(6px); }
+.box { border: 2px solid #1e3a8a; border-radius: 8px; padding: 10px; margin: 10px 0; cursor: pointer; text-align: center; background-color: #ffffff; font-weight: 800; }
+.box:hover { background-color: rgba(220,38,38,0.1); border-color: #dc2626; color: #dc2626; transform: translateY(-2px); }
+.media-container { display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px; }
+.saisonnier-papeterie { display: flex; justify-content: space-around; align-items: flex-start; margin-top: 20px; }
+.box-verticale { border: 2px solid #1e3a8a; padding: 15px 10px; text-align: center; display: flex; flex-direction: column; justify-content: flex-end; line-height: 1.2; border-radius: 8px; }
+.passage { text-align: center; margin: 15px 0; font-style: italic; color: #1e3a8a; opacity: 0.8; }
+.entree-principale { position: absolute; right: -155px; top: 50%; transform: translateY(-50%); font-weight: 900; color: #1e3a8a; text-align: center; line-height: 1.8; background-color: white; border: 3px solid #1e3a8a; border-radius: 12px; padding: 14px 12px; font-size: 0.95em; letter-spacing: 1px; box-shadow: 0 6px 18px rgba(30,58,138,0.15); width: 130px; }
+.entree-principale::before { content: '🚪'; display: block; font-size: 1.8em; margin-bottom: 4px; }
+.footer { border-top: 3px solid #1e3a8a; text-align: right; padding: 15px 25px; font-weight: 800; color: #1e3a8a; background-color: #f8fafc; border-radius: 0 0 13px 13px; }
+.modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(15,23,42,0.6); justify-content: center; align-items: center; backdrop-filter: blur(4px); }
+.modal-content { background-color: #fff; padding: 40px; border-radius: 16px; width: 90%; max-width: 580px; max-height: 80vh; overflow-y: auto; position: relative; }
+.close-btn { position: absolute; top: 15px; right: 20px; font-size: 30px; cursor: pointer; font-weight: 800; color: #94a3b8; }
+.close-btn:hover { color: #dc2626; }
+.produits-grid { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 14px; }
+.produit-tag { background-color: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 20px; padding: 4px 12px; font-size: 0.88em; color: #334155; font-weight: 600; }
+.search-wrapper { width: 100%; max-width: 900px; margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
+.search-box { flex: 1; position: relative; display: flex; align-items: center; }
+.search-icon { position: absolute; left: 18px; font-size: 1.1em; pointer-events: none; }
+.search-input { width: 100%; padding: 13px 44px 13px 46px; border: 2px solid #1e3a8a; border-radius: 30px; font-size: 1em; font-family: inherit; font-weight: 600; color: #1e3a8a; outline: none; background: white; box-shadow: 0 4px 14px rgba(30,58,138,0.1); transition: all 0.25s; box-sizing: border-box; }
+.search-input::placeholder { color: #94a3b8; font-weight: 500; }
+.search-input:focus { border-color: #2563eb; box-shadow: 0 4px 20px rgba(37,99,235,0.22); }
+.search-clear { position: absolute; right: 14px; background: #e2e8f0; border: none; border-radius: 50%; width: 24px; height: 24px; font-size: 0.8em; cursor: pointer; color: #64748b; display: none; align-items: center; justify-content: center; font-weight: 800; transition: all 0.2s; }
+.search-clear:hover { background: #dc2626; color: white; }
+
+
+.search-results { font-size: 0.95em; font-weight: 700; white-space: nowrap; min-width: 160px; text-align: center; padding: 8px 16px; border-radius: 20px; background: white; border: 2px solid #e2e8f0; color: #94a3b8; }
+.rayon-highlight { background-color: rgba(253,224,71,0.75) !important; border-color: #ca8a04 !important; box-shadow: 0 0 0 2px #fde047, 0 0 16px rgba(253,224,71,0.8) !important; color: #78350f !important; transform: scale(1.04) !important; z-index: 2; position: relative; }
+.boucherie-vert-btn.rayon-highlight { transform: rotate(180deg) scale(1.04) !important; }
+.rayon-dim { opacity: 0.18; transition: opacity 0.3s; }
+.boucherie-ext-box.ext-highlight { border-color: #ca8a04 !important; box-shadow: -4px 2px 20px rgba(253,224,71,0.7) !important; }
+.boucherie-ext-box.ext-dim { opacity: 0.18; }
+.autocomplete-dropdown { position: fixed; background: white; border: 2px solid #1e3a8a; border-radius: 14px; box-shadow: 0 8px 24px rgba(30,58,138,0.15); z-index: 100; max-height: 230px; overflow-y: auto; display: none; touch-action: manipulation; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; }
+.autocomplete-item { padding: 10px 18px; cursor: pointer; font-weight: 600; color: #1e3a8a; font-size: 0.92em; border-bottom: 1px solid #f1f5f9; display: flex; align-items: center; gap: 8px; }
+.autocomplete-item:last-child { border-bottom: none; }
+.autocomplete-item:hover { background: #eff6ff; }
+.autocomplete-rayon-label { font-size: 0.76em; color: #94a3b8; margin-left: auto; font-weight: 500; white-space: nowrap; }
+
+.liste-panel-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.45); z-index:299; }
+.liste-panel-overlay.open { display:block; }
+.liste-panel {
+  position:fixed; bottom:0; left:0; right:0;
+  height:52svh; height:52vh;
+  max-height:52svh; max-height:52vh;
+  background:white;
+  box-shadow:0 -6px 30px rgba(0,0,0,0.2);
+  z-index:300;
+  transform:translateY(100%);
+  transition:transform 0.32s cubic-bezier(0.32,0.72,0,1), width 0.32s ease, left 0.32s ease, right 0.32s ease, border-radius 0.32s ease, height 0.32s ease, max-height 0.32s ease;
+  display:flex; flex-direction:column;
+  border-radius:18px 18px 0 0;
+  overflow:hidden;
+  pointer-events:none;
+  -webkit-overflow-scrolling:touch;
+  padding-bottom:env(safe-area-inset-bottom, 0px);
+}
+.liste-panel.open { transform:translateY(0); pointer-events:auto; }
+.liste-panel.parcours-side {
+  left:auto; right:0;
+  width:300px;
+  height:70svh; height:70vh;
+  max-height:70svh; max-height:70vh;
+  border-radius:18px 0 0 0;
+  box-shadow:-4px -4px 24px rgba(0,0,0,0.18);
+}
+.liste-header { background: #1e3a8a; color: white; padding: 12px 18px 14px; font-weight: 800; font-size: 1.1em; display: flex; flex-direction: column; align-items: stretch; flex-shrink:0; }
+.liste-close-btn { background: none; border: none; color: white; font-size: 1.5em; cursor: pointer; min-width:44px; min-height:44px; display:flex; align-items:center; justify-content:center; touch-action:manipulation; -webkit-tap-highlight-color:transparent; }
+.liste-close-btn:active { opacity: 0.6; transform: scale(0.9); }
+.liste-input-row { padding: 14px 16px 8px 16px; display: flex; gap: 10px; align-items: center; flex-shrink:0; }
+.liste-input-wrapper { flex: 1; position: relative; }
+.liste-input { width: 100%; padding: 13px 16px; border: 2px solid #e2e8f0; border-radius: 24px; font-family: inherit; font-size: 1em; font-weight: 600; color: #1e3a8a; outline: none; box-sizing: border-box; min-height:48px; }
+.liste-input:focus { border-color: #2563eb; }
+.liste-autocomplete { position: absolute; top: calc(100% + 4px); left: 0; right: 0; background: white; border: 2px solid #1e3a8a; border-radius: 14px; box-shadow: 0 8px 24px rgba(30,58,138,0.15); z-index: 500; max-height: 220px; overflow-y: auto; display: none; overscroll-behavior: contain; }
+.liste-ac-item { padding: 10px 14px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 8px; border-bottom: 1px solid #f1f5f9; transition: background 0.1s; touch-action:manipulation; -webkit-tap-highlight-color:transparent; }
+.liste-ac-item:last-child { border-bottom: none; }
+.liste-ac-item:hover, .liste-ac-item.active { background: #eff6ff; }
+.liste-ac-item:active { background: #dbeafe; }
+.liste-ac-nom { font-weight: 700; font-size: 0.88em; color: #1e3a8a; }
+.liste-ac-rayon { font-size: 0.73em; color: #94a3b8; font-weight: 500; white-space: nowrap; }
+.liste-input-hint { font-size: 0.72em; color: #94a3b8; padding: 4px 14px 10px; font-style: italic; }
+.liste-add-btn { padding: 0; background: #1e3a8a; color: white; border: none; border-radius: 50%; font-weight: 800; cursor: pointer; font-size: 1.3em; width:48px; height:48px; min-width:48px; display:flex; align-items:center; justify-content:center; touch-action:manipulation; -webkit-tap-highlight-color:transparent; }
+.liste-add-btn:hover { background: #1d4ed8; }
+.liste-add-btn:active { background: #1e40af; transform: scale(0.93); }
+.liste-items { flex: 1; overflow-y: auto; padding: 12px 16px; display: flex; flex-direction: column; gap: 10px; overscroll-behavior: contain; }
+.liste-item { display: flex; align-items: center; gap: 12px; padding: 13px 14px; background: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0; cursor: pointer; transition: all 0.15s; min-height:52px; touch-action:manipulation; -webkit-tap-highlight-color:transparent; }
+.liste-item:hover { background: #eff6ff; border-color: #bfdbfe; }
+.liste-item:active { background: #dbeafe; border-color: #93c5fd; transform: scale(0.985); }
+.liste-item.checked { opacity: 0.4; }
+.liste-item.checked .item-nom { text-decoration: line-through; }
+.liste-item input[type=checkbox] { width: 22px; height: 22px; cursor: pointer; accent-color: #1e3a8a; flex-shrink: 0; }
+.item-text { flex: 1; }
+.item-nom { font-weight: 700; font-size: 0.88em; color: #1e3a8a; }
+.item-rayon { font-size: 0.74em; color: #64748b; font-weight: 500; margin-top: 2px; }
+.item-del { background: none; border: none; color: #cbd5e1; cursor: pointer; font-size: 1em; flex-shrink: 0; min-width:44px; min-height:44px; display:flex; align-items:center; justify-content:center; touch-action:manipulation; -webkit-tap-highlight-color:transparent; }
+.item-del:hover { color: #dc2626; }
+.item-del:active { color: #dc2626; transform: scale(0.88); }
+.liste-footer { padding: 12px 16px; border-top: 2px solid #f1f5f9; display: flex; gap: 10px; flex-shrink:0; }
+.liste-tab { flex:1; padding:13px 6px; background:white; border:none; border-bottom:3px solid transparent; font-family:inherit; font-size:0.9em; font-weight:700; cursor:pointer; color:#94a3b8; transition:all 0.15s; min-height:48px; }
+.liste-tab.active { color:#1e3a8a; border-bottom-color:#1e3a8a; }
+.liste-tab:hover { background:#f8fafc; color:#1e3a8a; }
+.liste-bloc-textarea { flex:1; border:2px solid #e2e8f0; border-radius:14px; padding:14px; font-family:inherit; font-size:1em; resize:none; outline:none; color:#1e3a8a; font-weight:600; line-height:2; transition:border-color 0.2s; }
+.liste-bloc-textarea:focus { border-color:#1e3a8a; }
+.liste-bloc-textarea::placeholder { color:#cbd5e1; font-weight:500; }
+.liste-valider-btn { padding:16px; background:#059669; color:white; border:none; border-radius:14px; font-weight:700; font-family:inherit; font-size:1.05em; cursor:pointer; transition:background 0.2s; min-height:56px; }
+.liste-valider-btn:hover { background:#047857; }
+.liste-clear-btn { flex: 1; padding: 13px; background: #f1f5f9; border: none; border-radius: 14px; font-weight: 700; cursor: pointer; font-family: inherit; color: #64748b; font-size: 0.95em; min-height:52px; touch-action:manipulation; -webkit-tap-highlight-color:transparent; }
+.liste-clear-btn:hover { background: #fee2e2; color: #dc2626; }
+.liste-clear-btn:active { background: #fecaca; color: #dc2626; transform: scale(0.97); }
+.liste-parcours-btn { flex: 1; padding: 13px; background: #1e3a8a; color: white; border: none; border-radius: 14px; font-weight: 700; cursor: pointer; font-family: inherit; font-size: 0.95em; min-height:52px; touch-action:manipulation; -webkit-tap-highlight-color:transparent; }
+.liste-parcours-btn:hover { background: #1d4ed8; }
+.liste-parcours-btn:active { background: #1e40af; transform: scale(0.97); }
+.liste-parcours-btn.active { background: #059669; }
+.liste-parcours-btn.active:active { background: #047857; }
+.liste-empty { text-align: center; color: #94a3b8; font-size: 1em; padding: 24px 0; font-weight: 500; line-height: 1.8; }
+.parcours-step { display: flex; gap: 12px; align-items: flex-start; padding: 12px 14px; background: #f8fafc; border-radius: 12px; border: 2px solid #e2e8f0; cursor: pointer; transition: all 0.15s; margin-bottom: 8px; touch-action:manipulation; -webkit-tap-highlight-color:transparent; }
+.parcours-step:hover { background: #eff6ff; border-color: #93c5fd; }
+.parcours-step:active { background: #dbeafe; border-color: #93c5fd; transform: scale(0.985); }
+.parcours-step.done { opacity: 0.4; }
+.parcours-num { min-width: 26px; height: 26px; background: #1e3a8a; color: white; border-radius: 50%; font-weight: 800; font-size: 0.8em; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.parcours-step.done .parcours-num { background: #059669; }
+.parcours-rayon { font-weight: 800; font-size: 0.9em; color: #1e3a8a; }
+.parcours-items { font-size: 0.78em; color: #64748b; margin-top: 3px; line-height: 1.5; }
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.6;transform:scale(0.92)} }
+
+/* Modale de confirmation */
+.confirm-modal { display:none; position:fixed; z-index:2000; left:0; top:0; width:100%; height:100%; background:rgba(15,23,42,0.65); justify-content:center; align-items:center; backdrop-filter:blur(4px); }
+.confirm-modal.open { display:flex; }
+.confirm-box { background:white; border-radius:20px; padding:28px 24px 20px; width:88%; max-width:340px; text-align:center; box-shadow:0 20px 50px rgba(0,0,0,0.25); }
+.confirm-box h3 { color:#1e3a8a; margin:0 0 8px; font-size:1.1em; }
+.confirm-box p { color:#64748b; font-size:0.9em; margin:0 0 20px; line-height:1.5; }
+.confirm-btns { display:flex; gap:10px; }
+.confirm-cancel { flex:1; padding:14px; border:2px solid #e2e8f0; border-radius:14px; background:white; font-family:inherit; font-weight:700; font-size:0.95em; cursor:pointer; color:#64748b; }
+.confirm-cancel:active { background:#f1f5f9; }
+.confirm-ok { flex:1; padding:14px; border:none; border-radius:14px; background:#dc2626; color:white; font-family:inherit; font-weight:700; font-size:0.95em; cursor:pointer; }
+.confirm-ok:active { background:#b91c1c; }
+/* Onboarding tooltip */
+.onboarding-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.55); z-index:3000; justify-content:center; align-items:flex-end; padding-bottom:40px; }
+.onboarding-overlay.open { display:flex; }
+.onboarding-box { background:white; border-radius:20px; padding:24px 22px; width:90%; max-width:380px; box-shadow:0 20px 50px rgba(0,0,0,0.3); }
+.onboarding-box h2 { color:#1e3a8a; font-size:1.1em; margin:0 0 14px; text-align:center; }
+.onboarding-tips { display:flex; flex-direction:column; gap:10px; margin-bottom:20px; }
+.onboarding-tip { display:flex; align-items:flex-start; gap:10px; }
+.onboarding-tip-icon { font-size:1.4em; flex-shrink:0; margin-top:2px; }
+.onboarding-tip-text { font-size:0.87em; color:#334155; font-weight:600; line-height:1.4; }
+.onboarding-close { width:100%; padding:15px; background:#1e3a8a; color:white; border:none; border-radius:14px; font-family:inherit; font-weight:800; font-size:1em; cursor:pointer; }
+.onboarding-close:active { background:#1d4ed8; }
+/* Item quantité */
+.item-qty { display:flex; align-items:center; gap:5px; flex-shrink:0; }
+.qty-btn { width:28px; height:28px; border-radius:50%; border:2px solid #cbd5e1; background:white; font-size:1em; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#1e3a8a; flex-shrink:0; touch-action:manipulation; -webkit-tap-highlight-color:transparent; }
+.qty-btn:active { background:#dbeafe; border-color:#93c5fd; transform:scale(0.9); }
+.qty-val { font-size:0.88em; font-weight:800; color:#1e3a8a; min-width:18px; text-align:center; }
+/* Swipe to delete */
+.liste-item { overflow:hidden; position:relative; }
+.liste-item-inner { display:flex; align-items:center; gap:12px; width:100%; transition:transform 0.2s ease; touch-action:manipulation; -webkit-tap-highlight-color:transparent; }
+.swipe-delete-bg { position:absolute; right:0; top:0; bottom:0; background:#dc2626; display:flex; align-items:center; justify-content:flex-end; padding-right:16px; border-radius:12px; color:white; font-weight:800; font-size:0.85em; gap:4px; min-width:80px; opacity:0; transition:opacity 0.15s; pointer-events:none; }
+/* Bouton partage */
+.liste-share-btn { padding:13px 10px; background:#0ea5e9; color:white; border:none; border-radius:14px; font-weight:700; cursor:pointer; font-family:inherit; font-size:0.88em; min-height:52px; touch-action:manipulation; -webkit-tap-highlight-color:transparent; display:flex; align-items:center; justify-content:center; gap:5px; }
+.liste-share-btn:active { background:#0284c7; transform:scale(0.97); }
+@media (max-width:900px) { .liste-share-btn { min-height:62px; font-size:1.0em; border-radius:16px; padding:17px 10px; } }
+/* Barre progression parcours */
+.parcours-progress { background:#f1f5f9; border-radius:99px; height:6px; margin:0 0 12px; overflow:hidden; }
+.parcours-progress-bar { background:#059669; height:100%; border-radius:99px; transition:width 0.4s ease; }
+.parcours-progress-label { font-size:0.78em; color:#64748b; font-weight:700; text-align:right; margin-bottom:8px; }
+
+.open-liste-btn { display: flex; align-items: center; justify-content: center; gap: 7px; width: 100%; max-width: 900px; margin-bottom: 16px; padding: 9px 20px; background: #1e3a8a; color: white; border: none; border-radius: 20px; font-family: inherit; font-size: 0.88em; font-weight: 700; cursor: pointer; box-shadow: 0 3px 10px rgba(30,58,138,0.3); transition: all 0.2s; }
+.open-liste-btn:hover { background: #1d4ed8; transform: translateY(-1px); }
+/* ═══════════════════════════════════════════
+   MOBILE — breakpoint 900px
+   ═══════════════════════════════════════════ */
+@media (max-width: 900px) {
+  body { padding: 4px 6px 10px 6px; overflow-x: hidden; align-items: flex-start; }
+  .magasin-container { transform-origin: top left; }
+  .page-title { font-size: 0.78em; margin-bottom: 2px; letter-spacing: 0px; width: 100%; text-align: center; }
+  .instruction { font-size: 0.72em; margin-bottom: 4px; width: 100%; text-align: center; }
+  .nav-categories { gap: 3px; margin-bottom: 6px; flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+  .nav-categories::-webkit-scrollbar { display: none; }
+  .nav-pill { font-size: 0.44em; padding: 2px 4px; flex-shrink: 0; }
+  .search-input { font-size: 16px !important; padding: 9px 38px 9px 40px; min-height: 42px; }
+  .search-clear { width: 26px; height: 26px; font-size: 0.85em; right: 10px; }
+  .search-results { font-size: 0.78em; padding: 4px 8px 2px; min-width: 110px; }
+  .autocomplete-dropdown { border-radius: 16px; }
+  .autocomplete-item { padding: 14px 16px; font-size: 1em; min-height: 52px; }
+  .open-liste-btn { font-size: 0.76em; padding: 6px 12px; border-radius: 14px; margin-bottom: 6px; min-height: 34px; }
+  .search-wrapper { margin-bottom: 6px; }
+  .magasin-container { border-radius: 10px; }
+  /* .entree-principale reste visible — incluse dans le calcul de scale JS */
+  .header, .footer { font-size: 0.85em; padding: 10px 15px; }
+  .rayon { min-height: 38px; display: flex; align-items: center; }
+  .modal-content { padding: 20px 16px; border-radius: 16px; width: 95%; max-height: 85vh; }
+}
+/* ═══════════════════════════════════════════
+   MOBILE — Intérieur panneau liste optimisé
+   ═══════════════════════════════════════════ */
+@media (max-width: 900px) {
+  .liste-panel {
+    height: 82svh;
+    height: 82vh;
+    max-height: 82svh;
+    max-height: 82vh;
+  }
+  .liste-panel.parcours-side {
+    width: min(180px, 46vw);
+    height: 42svh;
+    height: 42vh;
+    max-height: 42svh;
+    max-height: 42vh;
+  }
+  .liste-header {
+    font-size: 1.25em;
+    padding: 14px 18px 16px;
+  }
+  .liste-close-btn {
+    font-size: 2em;
+    min-width: 52px;
+    min-height: 52px;
+  }
+  /* Onglets */
+  .liste-tab {
+    font-size: 1.1em;
+    padding: 17px 6px;
+    min-height: 58px;
+    font-weight: 800;
+  }
+  /* Champ de saisie */
+  .liste-input-row {
+    padding: 14px 14px 8px 14px;
+    gap: 12px;
+  }
+  .liste-input {
+    font-size: 16px !important; /* 16px évite le zoom auto iOS */
+    padding: 16px 18px !important;
+    min-height: 58px !important;
+    border-radius: 30px;
+    border-width: 2.5px;
+  }
+  /* Bouton + */
+  .liste-add-btn {
+    width: 58px !important;
+    height: 58px !important;
+    min-width: 58px !important;
+    font-size: 1.8em !important;
+    border-radius: 50% !important;
+    flex-shrink: 0;
+  }
+  /* Hint */
+  .liste-input-hint {
+    font-size: 0.88em;
+    padding: 6px 16px 12px;
+  }
+  /* Autocomplete dans le panneau — compact sur mobile */
+  .liste-ac-item {
+    padding: 6px 10px;
+    min-height: 32px;
+  }
+  .liste-ac-nom {
+    font-size: 0.78em;
+  }
+  .liste-ac-rayon {
+    font-size: 0.65em;
+  }
+  /* Items de la liste — compacts sur mobile */
+  .liste-items {
+    padding: 6px 10px;
+    gap: 5px;
+  }
+  .liste-item {
+    padding: 8px 10px;
+    min-height: 40px;
+    gap: 8px;
+    border-radius: 10px;
+    border-width: 1px;
+  }
+  .liste-item input[type=checkbox] {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+  }
+  .item-nom {
+    font-size: 0.88em;
+    line-height: 1.2;
+  }
+  .item-rayon {
+    font-size: 0.74em;
+    margin-top: 2px;
+  }
+  .item-del {
+    font-size: 1em;
+    min-width: 30px;
+    min-height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  /* Message liste vide */
+  .liste-empty {
+    font-size: 0.95em;
+    padding: 16px 0;
+    line-height: 1.8;
+  }
+  /* Footer avec boutons */
+  .liste-footer {
+    padding: 8px 10px;
+    gap: 6px;
+    flex-shrink: 0;
+  }
+  .liste-clear-btn {
+    font-size: 0.88em;
+    padding: 10px 8px;
+    min-height: 42px;
+    border-radius: 12px;
+  }
+  .liste-parcours-btn {
+    font-size: 0.88em;
+    padding: 10px 8px;
+    min-height: 42px;
+    border-radius: 12px;
+  }
+  /* Vue texte libre */
+  .liste-bloc-textarea {
+    font-size: 16px; /* 16px pour éviter zoom iOS */
+    line-height: 2.4;
+    padding: 18px;
+    border-radius: 16px;
+    border-width: 2.5px;
+  }
+  .liste-valider-btn {
+    font-size: 1.2em;
+    padding: 20px;
+    min-height: 66px;
+    border-radius: 16px;
+    letter-spacing: 0.3px;
+  }
+  /* Autocomplete réduit quand clavier ouvert */
+  .liste-autocomplete {
+    max-height: 160px;
+  }
+  /* Parcours */
+  #parcoursView {
+    padding: 14px;
+    overscroll-behavior: contain;
+  }
+  .parcours-step {
+    padding: 15px 14px;
+    min-height: 64px;
+    gap: 14px;
+    border-radius: 14px;
+    margin-bottom: 10px;
+  }
+  .parcours-num {
+    min-width: 34px;
+    height: 34px;
+    font-size: 0.95em;
+    flex-shrink: 0;
+  }
+  .parcours-rayon {
+    font-size: 1.1em;
+  }
+  .parcours-items {
+    font-size: 0.94em;
+    line-height: 1.65;
+    margin-top: 4px;
+  }
+}
+
+/* ═══════════════════════════════════════════
+   PARCOURS-SIDE : panneau latéral compact
+   Masque tout ce qui n'est pas la liste de rayon
+   ═══════════════════════════════════════════ */
+.liste-panel.parcours-side .liste-input-row { display: none !important; }
+.liste-panel.parcours-side .liste-input-hint { display: none !important; }
+.liste-panel.parcours-side #listeAutocomplete { display: none !important; }
+.liste-panel.parcours-side .liste-share-btn  { display: none !important; }
+.liste-panel.parcours-side .liste-clear-btn  { display: none !important; }
+.liste-panel.parcours-side .liste-header     { padding: 8px 10px 10px; }
+.liste-panel.parcours-side .liste-close-btn  { font-size: 1.2em; min-width: 36px; min-height: 36px; }
+.liste-panel.parcours-side .liste-footer     { padding: 8px 10px; }
+.liste-panel.parcours-side .liste-parcours-btn { font-size: 0.82em; padding: 10px 8px; min-height: 40px; width: 100%; }
+.liste-panel.parcours-side #parcoursView     { padding: 8px 10px; gap: 6px; }
+.liste-panel.parcours-side .parcours-step    { padding: 10px 8px; min-height: 44px; gap: 8px; border-radius: 10px; margin-bottom: 6px; }
+.liste-panel.parcours-side .parcours-num     { min-width: 24px; height: 24px; font-size: 0.75em; }
+.liste-panel.parcours-side .parcours-rayon   { font-size: 0.82em; }
+.liste-panel.parcours-side .parcours-items   { font-size: 0.73em; line-height: 1.4; }
+.liste-panel.parcours-side .parcours-progress-label { font-size: 0.72em; }
+
+
+</style>
+</head>
+<body>
+ <div class="page-title">VOTRE PLAN CARREFOUR LAVAL</div>
+ <div class="instruction" style="display:flex;align-items:center;justify-content:center;gap:8px;">🔍 Recherchez où se trouvent vos produits ou cliquez sur les rayons<button id="helpBtn" style="background:rgba(30,58,138,0.12);border:1px solid rgba(30,58,138,0.3);border-radius:50%;width:20px;height:20px;font-size:0.7em;cursor:pointer;color:#1e3a8a;font-weight:800;flex-shrink:0;touch-action:manipulation;">?</button></div>
+ <div class="nav-categories">
+  <a href="#sect-maison" class="nav-pill" style="color:#0d9488;border-color:#0d9488;">Maison</a>
+  <a href="#sect-technique" class="nav-pill" style="color:#ea580c;border-color:#ea580c;">Technique</a>
+  <a href="#sect-habillement" class="nav-pill" style="color:#7c3aed;border-color:#7c3aed;">Habillement</a>
+  <a href="#sect-bebe" class="nav-pill" style="color:#f472b6;border-color:#f472b6;">Bébé</a>
+  <a href="#sect-liquides" class="nav-pill" style="color:#2563eb;border-color:#2563eb;">Liquides</a>
+  <a href="#sect-alimentaire" class="nav-pill" style="color:#059669;border-color:#059669;">Alimentaire</a>
+  <a href="#sect-loisirs" class="nav-pill" style="color:#db2777;border-color:#db2777;">Loisirs</a>
+  <a href="#sect-animalerie" class="nav-pill" style="color:#8b4513;border-color:#8b4513;">Animalerie</a>
+  <a href="#sect-beaute" class="nav-pill" style="color:#c026d3;border-color:#c026d3;">Beauté</a>
+  <a href="#sect-entretien" class="nav-pill" style="color:#ca8a04;border-color:#ca8a04;">Entretien</a>
+ </div>
+ <div class="search-wrapper">
+  <div class="search-box">
+   <span class="search-icon">🔍</span>
+   <input type="text" class="search-input" id="searchInput" placeholder="Rechercher un produit…">
+   <button class="search-clear" id="searchClear">✕</button>
+   <div id="autocompleteList" class="autocomplete-dropdown"></div>
+  </div>
+  <div class="search-results" id="searchResults">Tapez pour chercher</div>
+ </div>
+ 
+<button class="open-liste-btn" id="openListeBtn">🛒 Créer ma liste &amp; obtenir mon parcours optimisé en magasin</button>
+ <div class="magasin-container">
+  <div class="header">FOND DU MAGASIN</div>
+  <div class="main-layout">
+   <div class="gauche">
+    <div class="rayon cat-technique" id="sect-technique" data-id="brico">🔨 Brico</div>
+    <div class="rayon cat-technique" data-id="auto">🚗 Auto</div>
+    <div class="rayon cat-maison" id="sect-maison" data-id="maison">🛋️ Maison</div>
+    <div class="rayon cat-maison" data-id="maison">🛋️ Maison</div>
+    <div class="rayon cat-maison" data-id="maison">🛋️ Maison</div>
+    <div class="rayon cat-maison" data-id="maison-blanc">🛏️ Maison/Blanc</div>
+    <div class="rayon cat-maison" data-id="maison-blanc">🛏️ Maison/Blanc</div>
+    <div class="rayon cat-maison" data-id="maison-blanc">🛏️ Maison/Blanc</div>
+    <div class="rayon cat-habillement" id="sect-habillement" data-id="femme">👗 Femme</div>
+    <div class="rayon cat-habillement" data-id="femme">👗 Femme</div>
+    <div class="rayon cat-habillement" data-id="femme">👗 Femme</div>
+    <div class="rayon cat-habillement" data-id="homme">👔 Homme</div>
+    <div class="rayon cat-habillement" data-id="homme">👔 Homme</div>
+    <div class="rayon cat-habillement" data-id="enfant">🧒 Enfant</div>
+    <div style="position:relative;display:flex;flex-direction:column;gap:4px;">
+     <div class="rayon cat-bebe" id="sect-bebe" data-id="textile-bebe">🧸 Bébé Textile</div>
+     <div class="rayon cat-bebe" data-id="bebe-pgc">🍼 Bébé Alim. & Hygiène</div>
+     <div class="rayon cat-liquides" id="sect-liquides" data-id="cave">🍷 Cave</div>
+     <div class="rayon cat-liquides" data-id="alcools">🥃 Alcools</div>
+     <div class="rayon cat-liquides" data-id="biere">🍺 Bières</div>
+     <div class="rayon cat-alimentaire" data-id="chips-gateaux">🧃 Jus / 🍟 Chips &amp; Gâteaux Ap.</div>
+     <div class="rayon cat-liquides" data-id="boisson">🥤 Boissons</div>
+     <div class="rayon cat-liquides" data-id="eaux">💧 Sirops & Eaux</div>
+     <div id="boulangerie-chips-ext-box" class="boucherie-ext-box boucherie-ext-double" style="top:0;bottom:0;height:auto;">
+      <div class="rayon boucherie-vert-btn" data-id="boulangerie">🥖 Boulangerie</div>
+      <div class="ext-btn-separator"></div>
+      <div class="rayon boucherie-vert-btn" data-id="chips-saucisson">🍟 Chips/<br>Saucisson</div>
+     </div>
+    </div>
+    <div class="rayon cat-alimentaire" id="sect-alimentaire" data-id="petit-dej">🍞 Compotes & Farine<br>Pain de mie & Brioche</div>
+    <div class="rayon cat-alimentaire" data-id="bio-diet">🥗 Bio/Diététique</div>
+    <div class="rayon cat-alimentaire" data-id="bio">🌱 Bio</div>
+    <div class="rayon cat-alimentaire" data-id="charcuterie-traiteur">🍖 Charcuterie Traiteur</div>
+    <div style="position:relative;display:flex;flex-direction:column;gap:4px;flex:1;">
+     <div class="box cat-alimentaire" style="display:flex;align-items:stretch;gap:8px;padding:8px;min-height:160px;">
+      <div class="rayon cat-alimentaire" data-id="sushi-wok" style="width:76px;display:flex;align-items:center;justify-content:center;text-align:center;border-radius:6px;flex-shrink:0;line-height:1.3;">🍣 Sushi &amp; Wok</div>
+      <div class="rayon cat-alimentaire" data-id="frais-local" style="flex:1;text-align:center;display:flex;flex-direction:column;justify-content:center;gap:4px;border-radius:6px;">🥩 Charcuterie<br><br>🍎 Fruits et Légumes<br><br>🥖 Produits Locaux</div>
+     </div>
+     <div style="flex:1;display:flex;flex-direction:column;justify-content:space-between;">
+      <div class="rayon cat-alimentaire" data-id="grignotage">🍫 Grignotage</div>
+      <div class="rayon cat-alimentaire" data-id="grignotage-petit-dej">🍪 Grignotage &amp; Petit Déj</div>
+      <div class="rayon cat-alimentaire" data-id="the-cafe-cereales">☕ Thé, Café &amp; Céréales</div>
+     </div>
+     <div id="pois-boucherie-ext-box" class="boucherie-ext-box boucherie-ext-double" style="top:0;bottom:0;height:auto;">
+      <div class="rayon boucherie-vert-btn" data-id="poissonnerie">🐟 Poissonnerie</div>
+      <div class="ext-btn-separator"></div>
+      <div class="rayon boucherie-vert-btn" data-id="boucherie">🥩 Boucherie</div>
+     </div>
+    </div>
+   </div>
+   <div class="droite">
+    <div class="droite-haut">
+     <div class="media-container">
+      <div class="box rayon cat-loisirs" id="sect-loisirs" data-id="media">📱 MÉDIA</div>
+      <div class="box rayon cat-loisirs" data-id="petit-electro">🔌 PETITS ÉLECTROMÉNAGER</div>
+      <div class="box rayon cat-loisirs" data-id="bagage-sport">🎒 BAGAGE / ⚽ SPORT / 🚲 CYCLE</div>
+     </div>
+     <div class="saisonnier-papeterie">
+      <div style="display:flex;flex-direction:column;align-items:center;">
+       <div class="box rayon cat-loisirs" data-id="saisonnier" style="width:120px;height:170px;display:flex;justify-content:center;align-items:center;margin-bottom:20px;">🎄 SAISONNIER</div>
+      </div>
+      <div class="bloc-culture-container">
+       <div style="display:flex;gap:15px;align-items:flex-end;margin-bottom:10px;">
+        <div class="rayon box-verticale cat-loisirs" data-id="papeterie">✏️<br>P<br>A<br>P<br>E<br>T<br>E<br>R<br>I<br>E</div>
+        <div class="rayon box-verticale cat-loisirs" data-id="jouet">🧸<br>J<br>O<br>U<br>E<br>T</div>
+        <div class="rayon box-verticale cat-loisirs" data-id="culture">📚<br>C<br>U<br>L<br>T<br>U<br>R<br>E</div>
+        <div class="rayon box-verticale cat-loisirs" data-id="culture-2">📚<br>C<br>U<br>L<br>T<br>U<br>R<br>E</div>
+       </div>
+       <div class="box rayon cat-loisirs" data-id="livres-culture" style="margin:0;">📖 CULTURE</div>
+      </div>
+     </div>
+     <div style="border-top:3px solid #1e3a8a;margin:25px -15px 15px -15px;"></div>
+     <div style="position:relative;">
+      <div class="passage">(passage) ◄</div>
+      <div class="box rayon" data-id="ilots" style="margin-top:30px;height:90px;display:flex;align-items:center;justify-content:center;">🏷️ ALLÉE CENTRALE</div>
+      <div class="entree-principale">ENTRÉE<br>PRINCIPALE<br>CLIENT</div>
+     </div>
+    </div>
+    <div class="droite-bas">
+     <div>
+      <div class="rayon cat-animalerie" id="sect-animalerie" data-id="animalerie">🐶 Animalerie</div>
+      <div class="rayon cat-animalerie" data-id="animalerie">🐱 Animalerie</div>
+      <div class="rayon cat-entretien" id="sect-entretien" data-id="droguerie">🧽 Droguerie</div>
+      <div class="rayon cat-entretien" data-id="droguerie-brosserie">🧹 Droguerie/Brosserie</div>
+      <div class="rayon cat-entretien" data-id="droguerie">🧼 Droguerie</div>
+      <div class="rayon cat-beaute" id="sect-beaute" data-id="parfumerie-1">🚿 Gel Douche &amp; Savon Femme</div>
+      <div style="display:flex;gap:3px;margin:2px 0 0 0;align-items:stretch;">
+       <div class="rayon cat-beaute" data-id="parfumerie-7" style="flex:3;display:flex;align-items:center;justify-content:center;text-align:center;font-size:0.78em;padding:4px 3px;border-radius:6px;line-height:1.2;">🌙 Soins & Maquillage</div>
+       <div class="rayon cat-beaute" data-id="parfumerie-6" style="flex:3;display:flex;align-items:center;justify-content:center;text-align:center;font-size:0.78em;padding:4px 3px;border-radius:6px;line-height:1.2;">🌿 Soins Hydratants</div>
+       <div class="rayon cat-beaute" data-id="parfumerie-5" style="flex:3;display:flex;align-items:center;justify-content:center;text-align:center;font-size:0.78em;padding:4px 3px;border-radius:6px;line-height:1.2;">✂️ Rasoir &amp; Épilation</div>
+       <div style="display:flex;flex-direction:column;gap:8px;flex-shrink:0;align-self:stretch;min-height:90px;">
+        <div class="rayon cat-beaute" data-id="parfumerie-2" style="flex:1;">🦷 Shampoing &amp; Dentifrice</div>
+        <div class="rayon cat-beaute" data-id="parfumerie-3" style="flex:1;">👨 Homme &amp; Accessoires</div>
+       </div>
+      </div>
+      <div class="rayon cat-beaute" data-id="parfumerie-4">💄 Maquillage &amp; Protections</div>
+      <div class="rayon cat-alimentaire" data-id="fromage-frais">🧀 Fromage Frais</div>
+      <div class="rayon cat-alimentaire" data-id="ultra-frais">🥛 Ultra Frais / Crémerie</div>
+      <div class="rayon cat-alimentaire" data-id="surgeles">❄️ Surgelés</div>
+      <div class="rayon cat-alimentaire" data-id="surgeles">❄️ Surgelés</div>
+      <div class="rayon cat-alimentaire" data-id="epicerie-salee-1">🧂 Épicerie Salée</div>
+      <div class="rayon cat-alimentaire" data-id="epicerie-salee-2">🍝 Épicerie Salée</div>
+      <div class="rayon cat-alimentaire" data-id="produits-monde">🌍 Produits du Monde</div>
+     </div>
+    </div>
+   </div>
+  </div>
+  <div class="footer">ENTRÉE CLIENT</div>
+ </div>
+ <div class="liste-panel-overlay" id="listePanelOverlay"></div>
+ <div class="liste-panel" id="listePanel">
+  <div class="liste-header" id="listeHeaderNormal" style="flex-direction:column;gap:8px;">
+   <div style="width:36px;height:4px;border-radius:99px;background:rgba(255,255,255,0.4);margin:0 auto;"></div>
+   <div style="display:flex;justify-content:space-between;align-items:center;width:100%;">🛒 Ma liste de courses<button class="liste-close-btn" id="listeClose">✕</button></div>
+  </div>
+  <div id="listeNormalView" style="display:flex;flex-direction:column;flex:1;overflow:hidden;min-height:0;">
+   <div class="liste-input-row">
+    <div class="liste-input-wrapper">
+     <input type="text" class="liste-input" id="listeInput" placeholder="Ex: lait, pain, steak...">
+     <div id="listeAutocomplete" class="liste-autocomplete"></div>
+    </div>
+    <button class="liste-add-btn" id="listeAdd">+</button>
+   </div>
+   <div class="liste-items" id="listeItems" style="overflow-y:auto;flex:1;min-height:0;-webkit-overflow-scrolling:touch;">
+    <div class="liste-empty" id="listeEmpty">Votre liste est vide.<br>Ajoutez des produits ci-dessus !</div>
+   </div>
+   <div id="parcoursView" style="display:none;flex:1;min-height:0;overflow-y:auto;padding:14px 16px;flex-direction:column;gap:10px;">
+    <div class="parcours-progress-label" id="parcoursProgressLabel"></div>
+    <div class="parcours-progress"><div class="parcours-progress-bar" id="parcoursProgressBar" style="width:0%"></div></div>
+    <div style="font-size:0.8em;color:#64748b;font-weight:600;margin-bottom:4px;">Suivez cet ordre dans le magasin :</div>
+    <div id="parcoursSteps"></div>
+   </div>
+   <div class="liste-footer">
+    <button class="liste-share-btn" id="listeShareBtn" title="Partager la liste">📤</button>
+    <button class="liste-clear-btn" id="listeClear">🗑️ Effacer</button>
+    <button class="liste-parcours-btn" id="listeParcoursBtn">🗺️ Mon Parcours</button>
+   </div>
+  </div>
+ </div>
+ <!-- Modale confirmation vider liste -->
+<div id="confirmModal" class="confirm-modal">
+  <div class="confirm-box">
+    <h3>🗑️ Vider la liste ?</h3>
+    <p>Tous vos articles seront supprimés.<br>Cette action est irréversible.</p>
+    <div class="confirm-btns">
+      <button class="confirm-cancel" id="confirmCancel">Annuler</button>
+      <button class="confirm-ok" id="confirmOk">Vider</button>
+    </div>
+  </div>
+</div>
+<!-- Onboarding premier lancement -->
+<div id="onboardingOverlay" class="onboarding-overlay">
+  <div class="onboarding-box">
+    <h2>🛒 Bienvenue sur votre plan Carrefour !</h2>
+    <div class="onboarding-tips">
+      <div class="onboarding-tip">
+        <span class="onboarding-tip-icon">🔍</span>
+        <span class="onboarding-tip-text">Tapez un produit dans la barre de recherche — le rayon s'allume sur le plan.</span>
+      </div>
+
+      <div class="onboarding-tip">
+        <span class="onboarding-tip-icon">🗺️</span>
+        <span class="onboarding-tip-text">Créez votre liste de courses et obtenez un parcours optimisé dans le magasin.</span>
+      </div>
+      <div class="onboarding-tip">
+        <span class="onboarding-tip-icon">👆</span>
+        <span class="onboarding-tip-text">Pincez pour zoomer sur le plan, ou tapez un rayon pour voir ses produits.</span>
+      </div>
+    </div>
+    <button class="onboarding-close" id="onboardingClose">C'est parti ! 🚀</button>
+  </div>
+</div>
+<div id="infoModal" class="modal">
+  <div class="modal-content">
+   <span class="close-btn">&times;</span>
+   <h2 id="modal-title" style="color:#1e3a8a;margin-bottom:6px;"></h2>
+   <p id="modal-desc" style="font-size:1em;color:#64748b;margin:0 0 4px;font-style:italic;"></p>
+   <div id="modal-produits" class="produits-grid"></div>
+  </div>
+ </div>
+
+<script>
+const rayonData = {
+"brico":{"titre":"🔨 Bricolage","desc":"Outillage, fixation, électricité, peinture & décoration intérieure.","marques":["Bosch","Dewalt","Makita","Stanley","Facom","Black & Decker","Würth","Metabo","Milwaukee","Festool","Ryobi","AEG","Einhell","Parkside","Fischer","Spit","Hilti","Pattex","Sika","Rubson","Bostik","Loctite","Scotch","3M","UHU","Pritt","Osram","Philips","Legrand","Schneider","Hager","Siemens","V33","Dulux","Tollens","Sikkens","Bondex","Julien","Hammerite","Knauf","Weber","Nicoll","Wavin","Grohe","Hansgrohe","Jacob Delafon"],"synonymes":["perceuse","visseuse","marteau","tournevis","ampoule","prise","interrupteur","peinture","enduit","colle","silicone","cheville","vis","clou","ruban"],"produits":["Marteau","Tournevis","Perceuse","Visseuse","Niveau à bulle","Mètre ruban","Pince","Clé plate","Clé à molette","Scie à main","Cutter","Ciseau à bois","Cheville","Vis","Clou","Boulon","Écrou","Colle forte","Mastic silicone","Ruban adhésif","Peinture mur intérieur","Peinture boiseries","Apprêt","Enduit de rebouchage","Rouleau à peindre","Pinceau","Bâche de protection","Ruban de masquage","Ampoule LED","Interrupteur","Prise électrique","Câble électrique","Disjoncteur","Boîte de dérivation","Détecteur de fumée","Pile","Serrure","Verrou","Cadenas","Poignée de porte","Charnière","Tuyau PVC","Joint plomberie","Robinet","Siphon","Collier de serrage"]},
+"auto":{"titre":"🚗 Automobile","desc":"Entretien, accessoires et équipement pour votre véhicule.","marques":["Castrol","Total","Mobil","Shell","Motul","Bardahl","Elf","Bosch","Valeo","NGK","Champion","Denso","Hella","Osram","Philips","Turtle Wax","Meguiar's","Sonax","Autoglym","WD-40","Würth","Varta","Exide","Banner"],"synonymes":["huile moteur","huile voiture","essuie-glaces","essuie glaces","batterie voiture","lave-glace","antigel","balais","gilet jaune","triangle","extincteur"],"produits":["Huile moteur","Liquide de refroidissement","Liquide de frein","Liquide lave-glace","Antigel","Dégivreur pare-brise","Essuie-glace avant","Essuie-glace arrière","Ampoule voiture","Batterie voiture","Câble de démarrage","Chargeur de batterie","Filtre à huile","Filtre à air","Bougie d'allumage","Dégrippant","Polish carrosserie","Cire voiture","Shampoing auto","Gilet jaune","Triangle signalisation","Gonfleur électrique","Extincteur auto","Cric de voiture"]},
+"maison":{"titre":"🛋️ Maison","desc":"Décoration, vaisselle, cuisine et rangement pour toute la maison.","marques":["Pyrex","Luminarc","Duralex","Arc","Bormioli","Zwilling","Wüsthof","Sabatier","Opinel","Tefal","Le Creuset","Staub","De Buyer","Mauviel","SEB","Lagostina","KitchenAid","Moulinex","Tupperware","Sistema","Emsa","Curver","Rotho","Joseph Joseph","OXO","Brabantia","Mepal"],"synonymes":["vaisselle","assiettes","verres","poêle","casserole","cocotte","batterie cuisine","décoration","rideau","coussin","cadre","lampe","rangement","boîte"],"produits":["Coussin décoratif","Plaid","Rideau","Tringle à rideau","Store","Cadre photo","Miroir","Vase","Bougie","Guirlande lumineuse","Lampe de table","Assiette","Bol","Tasse","Mug","Verre","Carafe","Saladier","Plat à four","Casserole","Poêle","Wok","Cocotte","Faitout","Couteau de cuisine","Planche à découper","Économe","Spatule","Louche","Fouet","Passoire","Râpe","Ouvre-boîte","Tire-bouchon","Boîte hermétique","Sac congélation","Film étirable","Papier cuisson","Boîte de rangement","Corbeille","Crochet adhésif","Étagère","Patère","Cintre"]},
+"maison-blanc":{"titre":"🛏️ Maison / Blanc","desc":"Linge de maison : literie, bain et linge de table.","marques":["Dodo","Epéda","Dunlopillo","Tempur","Colombine","Tradilinge","Descamps","Garnier-Thiébaut","Essix","Blanc des Vosges","Drouault","Abeil"],"synonymes":["draps","drap-housse","housse couette","couette","oreiller","taie oreiller","serviettes bain","peignoir","tapis de bain","linge de maison","literie"],"produits":["Drap plat","Drap housse 90x190","Drap housse 140x190","Drap housse 160x200","Taie d'oreiller","Housse de couette","Couette 4 saisons","Couette hiver","Oreiller mémoire de forme","Oreiller classique","Protège-matelas","Alèse","Serviette de bain","Drap de bain","Gant de toilette","Tapis de bain","Peignoir","Serviette de plage","Nappe","Set de table","Serviette de table","Torchon","Tablier de cuisine","Gant de four","Manique","Couverture polaire","Plaid tricot","Jeté de canapé"]},
+"femme":{"titre":"👗 Textile Femme","desc":"Mode, lingerie, chaussures et accessoires pour femme.","marques":["Dim","Playtex","Sloggi","Triumph","Passionata","Calzedonia","Aubade","Nike","Adidas","Puma","New Balance","Converse","Vans","Levi's","Calvin Klein","Tommy Hilfiger","Lacoste","Ralph Lauren","Only","Vero Moda"],"synonymes":["lingerie","soutien-gorge","culotte","sous-vêtements femme","collants","bas","chaussettes femme","robe","jupe","pull femme","veste femme"],"produits":["T-shirt femme","Top","Chemisier","Blouse","Tunique","Robe casual","Robe de soirée","Jupe","Jupe longue","Pantalon femme","Jean femme","Legging","Jogging femme","Pull femme","Cardigan","Veste femme","Manteau femme","Parka","Soutien-gorge","Culotte","Collant","Chaussette femme","Pyjama femme","Nuisette","Robe de chambre femme","Basket femme","Ballerine","Escarpin","Sandale","Botte","Bottine","Sac à main","Ceinture femme","Écharpe","Foulard","Chapeau","Casquette femme"]},
+"homme":{"titre":"👔 Textile Homme","desc":"Mode, sous-vêtements, chaussures et accessoires pour homme.","marques":["Dim","Athena","Sloggi","Nike","Adidas","Puma","New Balance","Converse","Vans","Levi's","Calvin Klein","Tommy Hilfiger","Lacoste","Ralph Lauren","Jack & Jones","Selected"],"synonymes":["caleçon","boxer","slip homme","sous-vêtements homme","chaussettes homme","polo","chemise","pantalon homme","jean homme"],"produits":["T-shirt homme","Polo","Chemise casual","Chemise formelle","Pantalon chino","Jean homme","Jogging homme","Short","Pull homme","Sweat à capuche","Veste homme","Manteau homme","Blouson","Costume","Cravate","Boxer","Slip","Chaussette homme","Chaussette de sport","Pyjama homme","Robe de chambre homme","Basket homme","Chaussure de ville","Mocassin","Botte homme","Sandale homme","Ceinture homme","Écharpe homme","Bonnet","Casquette homme","Montre"]},
+"enfant":{"titre":"🧒 Textile Enfant","desc":"Vêtements pour garçons, filles et adolescents de 2 à 16 ans.","marques":["Nike","Adidas","Puma","Levi's","Petit Bateau","Sergent Major","Okaïdi","Absorba","Catimini","Dpam","Quechua","Domyos","Decathlon","Vertbaudet","Cyrillus","Jacadi"],"synonymes":["vêtements enfant","habits enfant","pyjama enfant","manteau enfant","uniforme","cartable","sac enfant","baskets enfant"],"produits":["T-shirt enfant","Polo enfant","Chemise enfant","Robe fille","Jupe fille","Legging fille","Pantalon garçon","Jean enfant","Short enfant","Jogging enfant","Pull enfant","Sweat enfant","Veste enfant","Manteau enfant","Sous-vêtement enfant","Chaussette enfant","Collant fille","Pyjama enfant","Basket enfant","Chaussure enfant","Sandale enfant","Botte enfant","Manteau de pluie","Bonnet enfant","Gant enfant","Écharpe enfant"]},
+"textile-bebe":{"titre":"🧸 Bébé — Textile & Accessoires","desc":"Layette, vêtements, poussettes, sièges auto et accessoires pour bébé de 0 à 36 mois.","marques":["Petit Bateau","Absorba","Catimini","Chicco","Vertbaudet","Dpam","Okaïdi","Bébé Confort","Noukie's","Sergent Major","Cyrillus","Jacadi","Bout'Chou"],"synonymes":["body bébé","pyjama bébé","grenouillère","gigoteuse","turbulette","doudou","peluche bébé","tour de lit","vêtements bébé"],"produits":["Body manches courtes","Body manches longues","Pyjama bébé","Grenouillère","Turbulette","Gigoteuse","T-shirt bébé","Pantalon bébé","Robe bébé fille","Ensemble bébé","Veste bébé","Manteau bébé","Combinaison hiver","Chausson bébé","Chaussure premiers pas","Chaussette bébé","Bonnet bébé","Moufle bébé","Bavoir","Bandana bavoir","Couverture bébé","Plaid bébé","Nid d'ange","Gigoteuse légère","Gigoteuse chaude","Sac de couchage bébé","Doudou textile","Lange en coton"]},
+"bebe-pgc":{"titre":"🍼 Bébé — Alimentation & Hygiène","desc":"Alimentation infantile (petits pots, lait, compotes), couches, lingettes et hygiène bébé.","marques":["Pampers","Pampers Pure","Pampers Baby Dry","Pampers Active Fit","Pampers Harmonie","Huggies","Libero","Lotus Bébé","Love & Green","Joone","Bambo Nature","Chicco","Mixa Bébé","Mustela","Johnson's","Bébé Cadum","Weleda Bébé","Blédina","Nestlé Bébé","HiPP","Aptamil","Gallia","Modilac","Guigoz","Novalac","Nuk","Dodie","MAM","Philips Avent","Tommee Tippee","Béaba","Tigex","Dr Brown"],"synonymes":["couches","couche-culotte","lait infantile","lait maternisé","biberon","tétine","sucette","lingettes bébé","lingettes","petits pots"],"produits":["Couche taille 1","Couche taille 2","Couche taille 3","Couche taille 4","Couche taille 5","Couche taille 6","Couche-culotte","Couche de nuit","Lingette bébé sans parfum","Lingette bébé sensible","Coton bébé","Lait 1er âge","Lait 2ème âge","Lait 3ème âge","Lait de croissance","Lait hypoallergénique","Lait anti-régurgitations","Petit pot légumes","Petit pot viande-légumes","Petit pot fruits","Purée en gourde","Compote bébé","Biscuit bébé","Céréale bébé","Gel lavant bébé","Shampoing bébé","Crème change","Crème hydratante bébé","Sérum physiologique","Thermomètre bébé","Mouche-bébé","Tétine","Sucette","Biberon","Anneau de dentition"]},
+"cave":{"titre":"🍷 Cave","desc":"Vins français et du monde, champagnes et crémants.","synonymes":["vin","vins","bordeaux","bourgogne","champagne","cremant","cava","prosecco","rose","blanc","rouge","pinot","chardonnay","cabernet","merlot","cotes du rhone","beaujolais","chablis","sancerre","muscadet"],"marques":["Mouton Cadet","Baron de Lestac","Calvet","Barton & Guestier","Gallo","Jacob's Creek","Yellow Tail","Casillero del Diablo","Concha y Toro","Penfolds","Wolf Blass","La Vieille Ferme","Skalli","Gérard Bertrand","Fortant de France","Mommessin","Moët & Chandon","Veuve Clicquot","Nicolas Feuillatte","Laurent-Perrier","Mumm","Piper-Heidsieck","Lanson","Louis Roederer","Bollinger","Taittinger","Deutz","Ruinart","Krug","Dom Pérignon","Pol Roger","Dopff & Irion","Willm","Lucien Albrecht","Wolfberger"],"produits":["Bordeaux rouge","Bourgogne rouge","Côtes du Rhône","Saint-Émilion","Beaujolais Nouveau","Côtes de Provence rouge","Bordeaux blanc sec","Bourgogne blanc","Pouilly-Fumé","Sancerre blanc","Muscadet","Alsace Riesling","Alsace Gewurztraminer","Chablis","Côtes de Provence rosé","Bandol rosé","Tavel rosé","Champagne brut","Champagne rosé","Champagne millésimé","Crémant d'Alsace","Crémant de Bourgogne","Prosecco","Cava","Vin rouge espagnol","Vin rouge italien","Vin rouge argentin","Vin blanc italien","Vin blanc néo-zélandais"]},
+"alcools":{"titre":"🥃 Alcools & Apéritifs","desc":"Spiritueux, apéritifs anisés, liqueurs et digestifs.","marques":["Johnnie Walker","Chivas Regal","Glenfiddich","Glenlivet","Macallan","Jameson","Jack Daniel's","Jim Beam","Maker's Mark","Absolut","Smirnoff","Grey Goose","Belvedere","Hendrick's","Tanqueray","Bombay Sapphire","Bacardi","Captain Morgan","Havana Club","Malibu","Jose Cuervo","Patrón","Hennessy","Rémy Martin","Courvoisier","Martell","Ricard","Pastis 51","Pernod","Aperol","Campari","Martini","Cinzano","Noilly Prat","Lillet","Baileys","Cointreau","Grand Marnier"],"synonymes":["alcool","alcools","vin","vins","champagne","prosecco","rhum","vodka","whisky","gin","apéritif","pastis","ricard","cointreau","spiritueux","digestif"],"produits":["Whisky écossais blend","Whisky single malt","Bourbon américain","Whisky irlandais","Vodka","Gin","Rhum blanc","Rhum ambré","Rhum vieux","Tequila","Cognac","Armagnac","Pastis","Anisette","Porto rouge","Porto blanc","Muscat","Vermouth blanc","Vermouth rouge","Liqueur de café","Amaretto","Triple sec","Liqueur d'orange","Limoncello","Calvados","Kirsch","Bière sans alcool","Vin sans alcool"]},
+"biere":{"titre":"🍺 Bières","desc":"Bières françaises et internationales, artisanales et packs.","marques":["Heineken","Kronenbourg","1664","Leffe","Hoegaarden","Grimbergen","Corona","Budweiser","Guinness","Stella Artois","Desperados","Carlsberg","Affligem","Duvel","Chimay","Jupiler","Amstel","Peroni","Birra Moretti","Brahma","Asahi","Tsingtao","Modelo","San Miguel","Estrella Damm","Kwak","Tripel Karmeliet","Vedett","Orval","Rochefort","Westmalle","Weihenstephaner","Paulaner","Erdinger","Warsteiner","Bitburger","Beck's","Meteor","Pelforth","Pietra","1664 Blanc","Leffe Blonde","Leffe Brune","Fischer","Brewdog","Goose Island","Sierra Nevada","Loic Raison","Stassen","Somersby"],"synonymes":["bière","bières","bieres","biere","6pack","pack de bières","blonde","brune","blanche","IPA","pale ale","craft beer","bière sans alcool"],"produits":["Bière blonde","Bière brune","Bière ambrée","Bière blanche","Bière de blé","Bière de garde","IPA","Stout","Pale Ale","Bière triple","Bière quadruple","Bière artisanale locale","Bière sans gluten","Bière sans alcool","Pack 6 bières","Pack 12 bières","Pack 24 bières","Cidre brut","Cidre doux","Cidre rosé","Poiré"]},
+"chips-gateaux":{"titre":"🧃 Jus / 🍟 Chips & Gâteaux Apéritifs","desc":"Jus de fruits, nectars, chips, biscuits apéritifs, crackers et nuts.","marques":["Tropicana","Joker","Pago","Cidou","Pressade","Innocent","Granini","Réa","Pringles","Lay's","Lay's Max","Doritos","Belin","Curly","Chipster","Bugles","Vico","Brets","Tyrells","Kettle","Takis","Tuc","Ritz","Cracotte"],"synonymes":["jus de fruit","jus d'orange","jus de pomme","jus de raisin","jus de pamplemousse","jus d'ananas","jus de mangue","nectar","jus multivitamines","jus pressé","jus","chips","chipster","apéro","apéritif","aperitif","cacahuètes","cacahuetes","pringles","tuiles","gâteau apéro","biscuits salés","biscuits apéro","bretzel","popcorn","pop-corn","nuts","noix","amandes grillées","pistaches"],"produits":["Jus d'orange 100% pur jus","Jus de pomme","Jus de raisin","Jus de pamplemousse","Jus multivitamines","Jus de mangue","Jus de goyave","Jus d'abricot","Jus de poire","Jus d'ananas","Jus de carotte","Jus de tomate","Jus de cerise","Jus de cranberry","Nectar de pêche","Nectar d'abricot","Nectar de mangue","Smoothie fruits rouges","Smoothie banane","Jus pressé orange","Chips nature","Chips paprika","Chips fromage","Chips barbecue","Chips sel & vinaigre","Chips ondulées","Chips de maïs","Chips de légumes","Popcorn salé","Popcorn caramel","Cacahuète grillée","Cacahuète salée","Amande grillée","Noix de cajou","Pistache grillée","Noix mélangées","Mix apéritif","Biscuit apéritif","Tuile apéritif","Bretzel","Gressin","Crackers apéritif","Tuc","Ritz","Gâteau apéritif","Mini crackers salés","Cacahuète enrobée","Noix de macadamia"]},
+"boisson":{"titre":"🥤 Boissons","desc":"Sodas, boissons énergisantes, thés glacés et boissons sucrées.","marques":["Coca-Cola","Coca","Pepsi","Pepsi Max","Fanta","Sprite","7 UP","Orangina","Schweppes","Canada Dry","Fever-Tree","Gini","Pulco","Lipton","Lipton Ice Tea","Arizona","Fuze Tea","Monster","Red Bull","Burn","Rockstar","Powerade","Gatorade","Isostar","Breizh Cola","Oasis","Mirinda","Lorina","Oasis","Gini"],"synonymes":["soda","sodas","coca","coke","limonade","thé froid","ice tea","energy drink","boisson énergisante","sirop"],"produits":["Boisson énergisante","Boisson isotonique","Thé glacé pêche","Thé glacé citron","Thé glacé vert","Ice tea","Sirop fraise","Sirop grenadine","Sirop menthe","Sirop citron","Sirop d'orgeat","Sirop caramel","Lait chocolaté","Café froid","Kombucha","Boisson au gingembre","Eau aromatisée"]},
+"eaux":{"titre":"💧 Sirops & Eaux","desc":"Sirops concentrés, packs d'eau plate, gazeuse et eaux aromatisées.","marques":["Teisseire","Monin","Routin","Pulco","Wilkins","Teisseire Bio","Evian","Volvic","Contrex","Vittel","Hépar","Cristaline","Mont Roucous","Thonon","Vals","Vichy Célestins","Chateldon","Wattwiller","Carola","Rozana","Perrier","Badoit","Salvetat","Quézac","Ogeu","San Pellegrino","Acqua Panna","Lurisia","Ferrarelle","Spa","Bru","Chaudfontaine","Evian Touch","Volvic Touch","Perrier Citron","Perrier Fraise","Perrier Pamplemousse"],"synonymes":["sirop","sirops","sirop de menthe","sirop de fraise","sirop de citron","sirop de grenadine","eau","eaux","eau plate","eau gazeuse","eau minérale","eau de source","eau pétillante","perrier","evian","vittel","volvic"],"produits":["Eau plate 1,5L","Pack eau plate 6x1,5L","Pack eau plate 8x1,5L","Eau minérale naturelle","Eau de source","Eau légèrement minéralisée","Eau riche en calcium","Eau riche en magnésium","Eau gazeuse naturelle","Eau pétillante 33cl","Eau pétillante 75cl","Pack eau gazeuse","Eau gazeuse aromatisée citron","Eau gazeuse aromatisée framboise","Eau gazeuse aromatisée pêche","Eau gazeuse aromatisée menthe","Eau plate 50cl","Eau plate 33cl","Sirop de fraise","Sirop de menthe","Sirop de citron","Sirop de grenadine","Sirop de pêche","Sirop de framboise","Sirop de violette","Sirop de noisette","Sirop de caramel","Sirop de vanille","Volvic Touch Fraise 1,5L","Volvic Touch Citron 1,5L","Volvic Touch Pêche 1,5L","Volvic Touch Framboise 1,5L","Evian Touch Fraise","Evian Touch Pêche","Eau aromatisée fraise","Eau aromatisée citron","Eau aromatisée pêche","Eau aromatisée concombre menthe","Eau aromatisée ananas coco"]}
+};
+
+const rayonData2 = {
+"bio-diet":{"titre":"🥗 Bio & Diététique","desc":"Produits sans gluten, sans lactose, diététiques et compléments alimentaires.","marques":["Bjorg","Alter Eco","Jardin Bio","Priméal","Markal","Lima","Biocoop","Soy","Ethiquable","Les 2 Vaches","Alpro","Oatly","Joya","Gerblé","Schär","Nutrimuscle","Foodspring","Nat & Form","Arkopharma","Solgar","NOW Foods","Garden of Life"],"synonymes":["bio","biologique","sans gluten","vegan","végétarien","vegetarien","végétalien","diététique","sans lactose","équitable","commerce équitable","agriculture bio"],"produits":["Pain de mie sans gluten","Pâtes sans gluten","Farine sans gluten","Biscuit sans gluten","Lait sans lactose","Yaourt sans lactose","Boisson végétale amande","Boisson végétale soja","Boisson végétale avoine","Boisson végétale riz","Yaourt au soja","Protéines en poudre","Protéines végétales","Barre protéinée","Complément vitamine D","Complément oméga 3","Magnésium","Probiotique","Quinoa","Graine de chia","Graine de lin","Granola","Fruits secs","Sirop d'agave","Stévia","Chocolat noir 70%","Galette de riz","Galette de maïs","Huile de lin","Huile d'avocat","Purée de sésame"]},
+"bio":{"titre":"🌱 Alimentation Bio","desc":"Épicerie sucrée et salée certifiée Agriculture Biologique.","marques":["Jardin Bio","Bjorg","Alter Eco","Priméal","Markal","Lima","Biocoop","Ethiquable","Soy","Les 2 Vaches","Andros Bio","Bonne Maman Bio","Terres & Saveurs"],"produits":["Pâtes bio","Riz bio","Lentilles bio","Pois chiches bio","Quinoa bio","Farine bio","Sucre de canne bio","Miel bio","Confiture bio","Huile d'olive bio","Huile de tournesol bio","Vinaigre de cidre bio","Café bio moulu","Thé bio","Infusion bio","Chocolat noir bio","Compote bio","Jus de pomme bio","Jus d'orange bio","Lait bio entier","Lait bio demi-écrémé","Beurre bio","Yaourt nature bio","Fromage frais bio","Œufs bio","Légumes bio en conserve","Soupe bio en brique","Sauce tomate bio","Biscuit bio","Céréale petit-déjeuner bio","Barre de céréales bio"]},
+"charcuterie-traiteur":{"titre":"🍖 Charcuterie Traiteur","desc":"Charcuterie en tranches, plats traiteur et salades préparées.","marques":["Herta","Fleury Michon","Madrange","Monique Ranou","Paul Prédault","Jean Caby","Coudène","Aoste","Stoeffler","Justin Bridou","Cochonou","Montagne Noire","Bordeau Chesnel","Hénaff","La Belle Chaurienne","Le Gaulois","William Saurin","Labeyrie","Delpeyrat","Maison Montfort","Rougié","Daunat","Marie","Sodebo","Bahier","Guyader"],"synonymes":["jambon","jambon blanc","jambon sec","saucisson","chorizo","lardons","bacon","pancetta","rillettes","pâté","paté","terrine","andouillette","rôti","saucisse","merguez","chipolata","boudin"],"produits":["Jambon blanc supérieur","Jambon de Paris","Jambon cru sec","Jambon de Bayonne","Jambon fumé","Jambon d'Italie","Saucisson sec","Rosette de Lyon","Salami","Chorizo doux","Chorizo fort","Rillettes de porc","Rillettes de canard","Pâté de campagne","Pâté de foie","Mousse de canard","Terrine de lapin","Fromage de tête","Lardons nature","Lardons fumés","Bacon","Magret de canard fumé","Salade taboulé","Salade carottes râpées","Salade niçoise","Salade piémontaise","Œufs mayonnaise","Quiche lorraine traiteur","Feuilleté apéritif","Sushi","Maki","Tartare de saumon","Brandade de morue"]},
+"sushi-wok":{"titre":"🍣 Sushi & Wok","desc":"Sushis, makis, plats asiatiques et woks préparés sur place.","synonymes":["sushi","sushis","maki","makis","wok","asiatique","japonais","california roll","noodles","nouilles","riz saute","bento","edamame","gyoza"],"marques":["Sushi Shop","Planet Sushi","O'Sushi","Matsuri","Wasabi","Itsu"],"produits":["Sushi saumon","Sushi thon","Sushi crevette","Maki saumon","Maki thon","Maki concombre","California roll","Plateau sushi assortiment","Plateau mixte","Wok poulet légumes","Wok bœuf nouilles","Wok crevettes","Riz sauté légumes","Riz cantonais","Nouilles sautées","Pad thaï","Soupe miso","Edamame","Gyoza poêlé","Sauce soja","Wasabi","Gingembre mariné"]},
+"frais-local":{"titre":"🥩 Zone Frais","desc":"Viandes fraîches, fruits & légumes frais (dont bio) et produits locaux.","marques":["Charal","Socopa","Bigard","Terrena","LDC","Doux","Label Rouge","Loué","Le Gaulois","Père Dodu","Maître Coq","Prince de Bretagne","Florette","Bonduelle Frais","Rougeline","Savéol"],"synonymes":["fruits","légumes","legumes","banane","pomme","tomate","salade","avocat","orange","citron","raisin","fraise","carottes","courgette","poivron","fruits bio","légumes bio","legumes bio","fruit bio","légume bio","legume bio","tomate bio","pomme bio","carotte bio","salade bio","courgette bio","poivron bio"],"produits":["Steak haché","Escalope de poulet","Filet de dinde","Côte de porc","Merguez","Chipolata","Saucisse","Tomate","Courgette","Poivron","Aubergine","Concombre","Carotte","Pomme de terre","Patate douce","Oignon","Ail","Échalote","Salade verte","Épinard frais","Brocoli","Chou-fleur","Radis","Poireau","Pomme","Poire","Orange","Citron","Banane","Kiwi","Fraise","Framboise","Raisin","Pêche","Abricot","Mangue","Tomate bio","Carotte bio","Courgette bio","Salade bio","Pomme bio","Fraise bio","Banane bio","Orange bio","Miel local","Confiture artisanale","Fromage fermier local","Œufs bio","Jus de fruit local"]},
+"grignotage":{"titre":"🍫 Grignotage & Confiseries","desc":"Chocolats, bonbons, barres chocolatées, gâteaux moelleux et préparations gâteaux.","marques":["Milka","Côte d'Or","Lindt","Kinder","Ferrero","Twix","Kit Kat","Snickers","Mars","M&M's","Haribo","Carambar","Chupa Chups","Mentos","Tic Tac","Nutella","Alsa","Vahiné","Dr. Oetker","Brossard","Savane"],"synonymes":["bonbons","confiseries","haribo","chocolat","chocolats","barres chocolatées","friandises","gâteau moelleux","gateaux moelleux","préparation gâteau","preparation gateau","fondant au chocolat","moelleux","brownie","cake","quatre-quarts"],"produits":["Chocolat au lait","Chocolat noir 70%","Chocolat blanc","Chocolat praliné","Tablette de chocolat","Barre chocolatée","Bonbon gélatiné","Ourson en guimauve","Caramel mou","Réglisse","Chewing-gum","Pastille menthe","Préparation pour gâteau","Préparation pour moelleux","Préparation pour fondant","Préparation pour brownie","Préparation pour cake","Gâteau moelleux emballé","Savane","Cake aux fruits","Quatre-quarts emballé"]},
+"grignotage-petit-dej":{"titre":"🍪 Grignotage & Petit Déj","desc":"Biscuits, biscottes, confitures, pâtes à tartiner et miel.","marques":["Lu","Oreo","Prince","BN","Petit Écolier","Pépito","Napolitain","Lotus","Speculoos","Bastogne","St Michel","Ker Cadelac","Bonne Maman","Michel et Augustin","Delacre","Heudebert","Wasa","Ryvita","Finn Crisp","Nutella","St Dalfour","Andros","Materne","Lucien Georgelin","Lune de Miel","Famille Mary"],"synonymes":["biscuit","biscuits","biscotte","biscottes","galette","galettes","cookie","cookies","speculoos","confiture","confitures","confiture de fraise","confiture d'abricot","confiture de framboises","miel","pâte à tartiner","nutella","tartiner","beurre de cacahuète","spread"],"produits":["Biscuit au beurre","Biscuit au chocolat","Biscuit fourré","Galette bretonne","Palet breton","Cookie chocolat","Speculoos","Petit beurre","Barquette confiture","Finger","Mikado","Biscotte nature","Biscotte céréales","Biscotte sans gluten","Galette de riz","Confiture fraise","Confiture abricot","Confiture framboises","Confiture de cerises","Miel toutes fleurs","Miel d'acacia","Miel de châtaignier","Miel liquide","Miel crémeux","Pâte à tartiner noisette-chocolat","Pâte à tartiner blanc","Purée d'amande","Purée de noisette"]},
+"the-cafe-cereales":{"titre":"☕ Thé, Café & Céréales","desc":"Cafés, thés, tisanes, céréales de petit-déjeuner, granola et flocons.","marques":["Nescafé","Nespresso","Dolce Gusto","Senseo","Tassimo","L'Or","Lavazza","Illy","Carte Noire","Malongo","Maxwell House","Grand Mère","Jacques Vabre","Lipton","Twinings","Elephant","Kusmi Tea","Tetley","Pukka","Nesquik","Ovomaltine","Poulain","Van Houten","Banania","Milo","Kellogg's","Chocapic","Frosties","Corn Flakes","Special K","Rice Krispies","Coco Pops","Cheerios","Trésor","Weetabix","Quaker","Jordan's"],"synonymes":["café","cafés","café moulu","café en grain","café soluble","capsule café","dosette café","nescafé","expresso","espresso","thé","thes","thé noir","thé vert","thé blanc","infusion","tisane","camomille","verveine","menthe","céréales","cereales","granola","muesli","corn flakes","flocons d'avoine","flocons","müesli","chocolat chaud","cacao","nesquik","milo","ovomaltine"],"produits":["Café moulu","Café en grain","Café soluble","Café décaféiné","Capsule de café","Dosette de café","Café expresso","Café arabica","Thé noir","Thé Earl Grey","Thé vert","Thé blanc","Thé rooibos","Infusion camomille","Infusion verveine","Infusion menthe","Tisane sommeil","Tisane digestion","Chocolat en poudre sucré","Cacao non sucré","Nesquik","Ovomaltine","Milo","Corn flakes","Muesli aux fruits","Granola miel-noisettes","Granola chocolat","Flocons d'avoine","Céréale au chocolat","Céréale au miel","Céréale complètes","Barre de céréales","Porridge"]},
+"petit-dej":{"titre":"🍞 Compotes & Farine · Pain de mie & Brioche","desc":"Pain de mie, brioches et madeleines emballées, compotes, farine, sucre et produits de pâtisserie.","marques":["Brossard","Pasquier","Brioche Pasquier","Harry's","Jacquet","La Boulangère","La Fournée Dorée","Andros","Charles & Alice","Materne","Pom'Potes","Blédina","Francine","Gruau d'Or","Daddy","Béghin Say","Vahiné","Alsa","Dr. Oetker"],"synonymes":["madeleine","madeleines","brioche","brioches","pain de mie","pain mie","petit-déjeuner","petit déjeuner","petitdej","p'tit dej","ptit dej","viennoiserie","compote","compotes","farine","sucre","pâtisserie","préparation gâteau","cake maison"],"produits":["Madeleine","Madeleine individuelle","Madeleine coquille","Madeleine longue","Madeleine aux pépites","Brioche tranchée","Brioche individuelle","Brioche nanterre emballée","Brioche tressée emballée","Pain de mie complet","Pain de mie blanc","Pain de mie sans croûte","Pain de mie graines","Croissant emballé","Pain au chocolat emballé","Chausson aux pommes emballé","Farine T45","Farine T55","Farine complète","Farine sans gluten","Sucre en poudre","Sucre glace","Cassonade","Sucre de canne"]},
+"media":{"titre":"📱 Média & High-Tech","desc":"Téléviseurs, smartphones, informatique et accessoires électroniques.","marques":["Samsung","LG","Sony","Philips","Hisense","TCL","Panasonic","Sharp","Bose","JBL","Harman Kardon","Sonos","Sennheiser","Jabra","Beats","AKG","Apple","iPhone","iPad","Huawei","Xiaomi","Samsung Galaxy","OnePlus","Google Pixel","Motorola","Nokia","Lenovo","Asus","Acer","HP","Dell","Microsoft","Logitech","Corsair","Belkin","Anker","Canon","Nikon","Fujifilm","GoPro","DJI","Nintendo","Switch","PlayStation","Xbox","Meta Quest"],"synonymes":["télé","TV","télévision","television","téléviseur","ecran","écran","ordinateur","ordi","laptop","PC","tablette","telephone","téléphone","smartphone","casque","enceinte","appareil photo","imprimante"],"produits":["Téléviseur LED 32\"","Téléviseur LED 43\"","Téléviseur OLED 55\"","Téléviseur 4K","Smartphone Android","Smartphone","Téléphone basique seniors","Tablette","Liseuse numérique","Ordinateur portable","PC de bureau","Clavier sans fil","Souris sans fil","Webcam","Casque micro","Écouteurs filaires","Écouteurs Bluetooth","Casque audio","Enceinte Bluetooth","Imprimante jet d'encre","Cartouche d'encre","Câble HDMI","Câble USB-C","Chargeur rapide","Batterie externe","Coque smartphone","Protège-écran","Carte mémoire SD","Clé USB","Disque dur externe","SSD externe","Console de jeu","Jeu vidéo","Manette de jeu","Casque VR"]},
+"petit-electro":{"titre":"🔌 Petit Électroménager","desc":"Appareils de cuisine, d'entretien et de confort pour la maison.","marques":["Tefal","Moulinex","SEB","Lagostina","De'Longhi","Braun","Kenwood","KitchenAid","Magimix","Thermomix","Vorwerk","Philips","Cuisinart","Russell Hobbs","Ariete","Princess","Bosch","Siemens","Nespresso","Dolce Gusto","Tassimo","Senseo","Jura","Melitta","Krups","WMF","Dyson","Roomba","iRobot","Miele","Rowenta","Hoover","Kärcher","Polti","Ecovacs","Roborock","Babyliss","Remington","Wahl","Panasonic","Parlux","GHD","Dyson Airwrap","Revlon","Braun Silk-épil","Philips Lumea","Nood","Ulike","SmoothSkin"],"synonymes":["frigo","réfrigérateur","refrigerateur","congélateur","congelateur","micro-ondes","micro ondes","four micro-ondes","machine à café","cafetière","aspirateur","robot cuisine","mixer","blender","grille-pain","grille pain","bouilloire","fer à repasser","sèche-cheveux","seche-cheveux","épilateur","epilateur","appareil épilation","appareil epilation","épilation électrique","epilation electrique","lumière pulsée","lumiere pulsee","laser épilation","silk-épil","philips lumea"],"produits":["Cafetière filtre","Machine à café à capsules","Machine à café à dosettes","Bouilloire électrique","Théière électrique","Grille-pain","Mini-four","Four à micro-ondes","Robot de cuisine","Mixeur plongeant","Blender","Centrifugeuse","Extracteur de jus","Friteuse","Friteuse sans huile","Appareil à raclette","Fondue","Croque-monsieur","Gaufrier","Yaourtière","Machine à pain","Aspirateur balai","Aspirateur robot","Aspirateur traîneau","Fer à repasser","Centrale vapeur","Défroisseur","Sèche-cheveux","Lisseur à cheveux","Boucleur","Tondeuse à barbe","Épilateur électrique","Épilateur Braun Silk-épil","Épilateur Philips Lumea","Appareil lumière pulsée","Ventilateur","Purificateur d'air","Humidificateur","Radiateur soufflant"]},
+"bagage-sport":{"titre":"🎒 Bagagerie / Sport / Cycle","desc":"Valises, sacs de voyage, articles de sport et vélos.","marques":["Samsonite","Delsey","American Tourister","Eastpak","Dakine","Osprey","Deuter","Gregory","Thule","Rimowa","Tumi","Nike","Adidas","Puma","Under Armour","Reebok","New Balance","Asics","Salomon","Decathlon","Quechua","Domyos","Kipsta","Kalenji","Wilson","Head","Babolat","Yonex","B'Twin","Rockrider","Triban","Van Rysel","Elops","Shimano","Mavic","Continental","Schwalbe","Fitbit","Garmin","Polar","Apple Watch"],"synonymes":["valise","valises","sac de voyage","sac sport","sac à dos","cartable","sport","fitness","musculation","running","football","vélo"],"produits":["Valise cabine","Valise moyenne","Valise grande","Sac à dos 20L","Sac à dos 40L","Sac à dos à roulettes","Sac de voyage","Sac week-end","Sac polochon","Sacoche de sport","Sac de gym","Tapis de yoga","Ballon de football","Ballon de basket","Ballon de handball","Raquette de tennis","Balle de tennis","Raquette de badminton","Vélo de ville","VTT adulte","Vélo enfant","Trottinette","Casque vélo","Antivol vélo","Sacoche vélo","Éclairage vélo","Pneu vélo","Chambre à air","Kit de réparation vélo","Pompe à vélo","Protège-genoux","Protège-coudes","Gant de sport","Chaussure de sport","Haltère","Élastique de fitness","Ceinture de sport","Montre sport"]},
+"saisonnier":{"titre":"🎄 Saisonnier","desc":"Produits adaptés à la saison en cours : jardin, rentrée, Noël, etc.","marques":["Vilmorin","Truffaut","Botanic","Gardena","Fiskars","Bosch Jardin","Ambre Solaire","Nivea Sun","Piz Buin","Banana Boat","Hawaiian Tropic","La Roche-Posay Anthelios","Repel","Cinq sur Cinq","Moustidose","Autan","OFF!","Coleman","Weber","Barbecook","Campingaz"],"produits":["Graine de fleur","Graine de légume","Plant de tomate","Terreau universel","Engrais plante","Pot de fleur","Bac à fleur","Arrosoir","Tuyau d'arrosage","Outil de jardinage","Gant de jardinage","Pelle à jardin","Râteau","Binette","Crème solaire SPF30","Crème solaire SPF50","Autobronzant","Après-soleil","Matelas gonflable","Bouée","Lunette de soleil","Chapeau de paille","Répulsif moustiques","Glacière","Barbecue jetable","Cartable","Trousse","Calculatrice","Sapin artificiel","Guirlande de Noël","Boule de Noël","Étoile de Noël","Calendrier de l'avent","Papier cadeau","Bougie de Noël","Luge","Bonnet hiver","Gant hiver","Écharpe hiver"]},
+"papeterie":{"titre":"✏️ Papeterie & Fournitures","desc":"Fournitures scolaires, bureau et matériel créatif.","marques":["Bic","Pilot","Stabilo","Maped","Pentel","Uni","Uniball","Zebra","Sharpie","Crayola","Staedtler","Faber-Castell","Rotring","Clairefontaine","Rhodia","Canson","Avery","Fellowes","Elba","Leitz","Esselte","Oxford","Moleskine","Leuchtturm","Filofax","Post-it","Scotch","3M","Pritt","UHU","Tipp-Ex","Tesa","Pebeo","Golden","Liquitex"],"synonymes":["stylo","crayon","feutre","cahier","classeur","feuilles","copies","bloc-notes","agenda","calculatrice","colle baton","ciseaux","post-it","scotch","ruban adhésif"],"produits":["Stylo bille","Stylo gel","Stylo plume","Feutre","Surligneur","Crayon de bois","Crayon de couleur","Pastel","Cahier A4","Cahier A5","Cahier à spirale","Carnet de notes","Répertoire","Classeur","Pochette plastique","Intercalaire","Porte-vues","Ramette papier A4","Papier couleur","Post-it","Bloc-notes","Mémo adhésif","Ciseaux","Cutter","Règle","Équerre","Rapporteur","Compas","Colle en stick","Colle liquide","Ruban adhésif","Taille-crayon","Gomme","Agrafeuse","Agraphe","Perforeuse","Trombone","Enveloppe","Étiquette autocollante","Peinture acrylique","Aquarelle","Papier dessin","Toile à peindre"]},
+"jouet":{"titre":"🧸 Jouets & Jeux","desc":"Jouets, jeux de société et jeux d'éveil pour tous les âges.","marques":["Lego","Playmobil","Kapla","Duplo","Meccano","Geomag","Ravensburger","Clementoni","Nathan","Djeco","Hasbro","Mattel","Asmodee","Dobble","Catan","Monopoly","Scrabble","Risk","Uno","Trivial Pursuit","Cluedo","Pandemic","Fisher-Price","VTech","Chicco","Smoby","Brio","Haba","Barbie","Hot Wheels","My Little Pony","Transformers","Star Wars","Marvel","Funko Pop","Schleich","Papo","Nerf","Super Soaker"],"synonymes":["jouet","jouets","lego","jeu","jeux","peluche","poupée","voiture jouet","puzzle","jeu de société","jeu d'extérieur","vélo enfant","trottinette"],"produits":["Puzzle 500 pièces","Puzzle 1000 pièces","Puzzle enfant","Jeu de société","Jeu de cartes","Jeu de dés","Construction plastique","Construction magnétique","Playset","Voiture miniature","Voiture télécommandée","Train électrique","Poupée","Maison de poupée","Dînette","Figurine","Figurine super-héros","Figurine fantastique","Peluche","Doudou","Poupée bébé","Cube d'éveil","Jouet de bain","Porteur","Trotteur","Vélo sans pédales","Kit peinture enfant","Kit créatif","Perle à repasser","Pâte à modeler","Ballon gonflable","Cerf-volant","Yoyo","Diabolo"]},
+"culture":{"titre":"📚 Culture","desc":"Livres, BD, mangas, CD et DVD.","marques":["Gallimard","Hachette","Flammarion","Albin Michel","Pocket","Folio","J'ai Lu","Le Livre de Poche","Actes Sud","Seuil","Robert Laffont","Pika","Glénat","Dargaud","Casterman","Dupuis","Marvel","DC Comics","Disney","Sony Music","Warner Music","Universal Music"],"synonymes":["film","DVD","blu-ray","bluray","musique","CD","vinyle","jeux vidéo","jeu vidéo","console","playstation","xbox","nintendo switch"],"produits":["Roman policier","Roman contemporain","Roman historique","Science-fiction","Fantasy","Livre de développement personnel","Biographie","Autobiographie","Livre de cuisine","Livre de jardinage","Livre de voyage","Guide touristique","Bande dessinée franco-belge","Album de BD","Manga shonen","Manga seinen","Manga shojo","CD musique pop","CD musique classique","DVD film d'action","DVD comédie","DVD film familial","DVD documentaire","Coffret série TV","Blu-ray","Film 4K Ultra HD"]},
+"culture-2":{"titre":"📚 Culture (suite)","desc":"Livres jeunesse, encyclopédies, presse et beaux livres.","marques":["Gallimard Jeunesse","Bayard","Hachette Jeunesse","Nathan Jeunesse","Milan","Larousse","Le Robert","Michelin","Lonely Planet","Le Routard","Le Figaro","Le Monde","L'Equipe","Paris Match","Télé 7 Jours","Closer","Voici","Gala","Elle","Femme Actuelle","Marie Claire","Cosmopolitan","Auto Plus"],"synonymes":["jeux vidéo","jeu vidéo","console","PlayStation","PS4","PS5","Xbox","Nintendo","Switch","jeu PS4","jeu PS5","jeu Xbox","jeu Nintendo"],"produits":["Album jeunesse","Conte illustré","Livre de lecture CP","Livre scolaire","Roman ado","Série jeunesse","Encyclopédie","Dictionnaire","Atlas","Livre d'histoire","Beau livre art","Beau livre photographie","Magazine people","Magazine cuisine","Magazine maison & déco","Magazine auto-moto","Magazine sport","Magazine informatique","Journal quotidien","Hebdomadaire","Mots croisés","Mots fléchés"]},
+"livres-culture":{"titre":"📖 Espace Livres / Culture","desc":"Espace principal culture : best-sellers, nouveautés, presse du jour.","marques":["Gallimard","Hachette","Actes Sud","Seuil","Relay","Lagardère"],"synonymes":["livre","livres","roman","BD","bande dessinée","manga","magazine","journal","presse","livre de poche","encyclopédie","guide","dictionnaire"],"produits":["Best-seller de la semaine","Nouveauté roman","Prix littéraire","Presse quotidienne","Journal national","Journal régional","Magazine hebdomadaire","Magazine mensuel","Revue spécialisée","Livre d'occasion","Carte postale","Carnet","Agenda","Calendrier mural"]},
+"ilots":{"titre":"🏷️ Ilôts Centraux","desc":"Mises en avant promotionnelles et offres spéciales du moment.","marques":[],"produits":["Tête de gondole promotionnelle","Produit en promotion flash","Lot spécial","Offre 2+1 gratuit","Offre saisonnière","Nouveauté en avant-première","Produit régional mis en avant","Sélection bio du moment","Sélection healthy","Produit coup de cœur"]},
+"animalerie":{"titre":"🐶 Animalerie","desc":"Alimentation, accessoires et soins pour chiens, chats et petits animaux.","marques":["Royal Canin","Purina","Purina One","Pro Plan","Pedigree","Iams","Eukanuba","Hill's","Orijen","Acana","Josera","Whiskas","Felix","Friskies","Sheba","Gourmet","Frontline","Frontline Combo","Advantage","Advantix","Seresto","Bravecto","Capstar","Milpro","Drontal","Virbac","Beaphar","Vitakraft","Versele-Laga","Tetra","JBL","Sera","Fluval","Juwel","Aquael","Eheim"],"synonymes":["croquettes","croquette","pâtée chat","pâtée chien","aliment chien","aliment chat","nourriture animaux","litière","bac litière","jouet chat","jouet chien","gamelle","laisse","engrais plantes","terreau","graines"],"produits":["Croquette chien petite race","Croquette chien grande race","Croquette chien senior","Pâtée chien en boîte","Sachet fraîcheur chien","Friandise chien","Os à mâcher","Croquette chat adulte","Croquette chat stérilisé","Croquette chat senior","Pâtée chat en boîte","Sachet fraîcheur chat","Friandise chat","Litière agglomérante","Litière minérale","Litière végétale","Bac à litière","Gamelle inox","Fontaine à eau","Distributeur automatique","Jouet pour chien","Jouet pour chat","Griffoir","Arbre à chat","Laisse","Harnais chien","Collier","Médaille d'identification","Shampoing animal","Antiparasitaire externe","Antiparasitaire interne","Vermifuge","Cage rongeur","Litière rongeur","Graine hamster","Graine perruche","Aquarium","Nourriture poisson","Filtre aquarium","Accessoire aquarium"]},
+"droguerie":{"titre":"🧽 Droguerie & Entretien","desc":"Produits ménagers, lessive et nettoyants pour toute la maison.","marques":["Ariel","Skip","Persil","Le Chat","X-TRA","Omo","Dash","Vizir","Wipp Express","Perwoll","Vanish","Lenor","Soupline","Comfort","Downy","Cajoline","Vernel","Fairy","Paic","Mir","Sun","Palmolive Vaisselle","Ajax Vaisselle","Finish","Somat","Calgon","Ajax","Cif","Mr. Propre","Mr Propre","Flash","Starwax","St Marc","KH-7","Sanytol","Lysol","Dettol","Harpic","Canard WC","Canard","WC Net","Domestos","Bref","Glorix","Febreze","Glade","Air Wick","Ambi Pur","Destop","Viakal","Cillit Bang","Cillit"],"synonymes":["lessive","lavage","lave-linge","lave linge","détergent","detergent","adoucissant","assouplissant","vitre","vitres","déboucheur","deboucheur","détartrant","detartrant","nettoyant","désodorisant WC","WC","toilettes","antimites","antimite","cafard","cafards","insecticide","anti-nuisibles","bougies","allumettes","briquets","allume-feu","prise anti-moustiques"],"produits":["Lessive liquide","Lessive poudre","Lessive capsules","Lessive écologique","Adoucissant","Détachant textile","Liquide vaisselle","Liquide vaisselle écologique","Pastille lave-vaisselle","Sel lave-vaisselle","Liquide de rinçage","Nettoyant multi-surfaces","Nettoyant cuisine","Nettoyant salle de bain","Déboucheur canalisations","Détartrant","Détartrant WC","Gel WC","Bloc WC","Brosse WC","Désinfectant surfaces","Spray désinfectant","Lingette désinfectante","Nettoyant vitre","Nettoyant inox","Nettoyant four","Désodorisant maison","Désodorisant spray","Bâton d'encens","Diffuseur"]},
+"droguerie-brosserie":{"titre":"🧹 Brosserie & Accessoires ménagers","desc":"Matériel de nettoyage, balais, serpillières et accessoires du quotidien.","marques":["Spontex","Vileda","Scotch-Brite","Mapa","Kali","Leifheit","EasyMop","Addis","Sabco","O-Cedar","Sopalin","Lotus","Okay","Tork","Renova","Zewa","Bounty","Plenty","Regina","Nalys","Albal","Rubson","Handy Bag","Glad","Toppits","Swirl","Tesa","Scotch 3M","Raid","Baygon","Catch","Neocid","Aeroxon","Compo"],"synonymes":["PQ","papier cul","papier toilettes","PH","sopalin","essuie-tout","essuie tout","rouleaux","mouchoirs","kleenex","serpillière","balai","lavette","éponge","sac poubelle","sac-poubelle","poubelle","film plastique","film alimentaire","papier alu","aluminium","papier cuisson","gants ménage"],"produits":["Balai brosse","Balai serpillière","Serpillière microfibre","Frange de rechange","Seau ménager","Pelle à poussière","Balai à franges","Tête de vadrouille","Éponge grattante","Éponge microfibre","Chiffon microfibre","Gant ménager","Gant latex","Gant nitrile","Sac poubelle 30L","Sac poubelle 50L","Sac poubelle 100L","Sac poubelle parfumé","Papier essuie-tout","Rouleau essuie-tout","Papier toilette","Papier toilette humide","Film étirable ménager","Papier aluminium","Papier cuisson","Sac congélation","Boîte zip","Brosse WC","Raclette vitre","Chasse-mouches","Piège souris","Piège insectes","Anti-mites","Anti-cafards"]},
+"parfumerie-1":{"titre":"🚿 Gel Douche, Savon & Déo Femme","desc":"Gel douche, savon, déodorant femme et coloration capillaire.","marques":["Dove","Palmolive","Ushuaïa","Tahiti","Cadum","Monsavon","Le Petit Marseillais","Original Source","Sanex","Fa","L'Oréal Excellence","Garnier Nutrisse","Schwarzkopf","Vidal","Casting Crème Gloss","Olia","Préférence","Rexona","Sure","Narta","Mennen","Dove Deo","Garnier Mineral","Mitchum","Bionsen","Pitrok"],"synonymes":["gel douche","gel de douche","savon","savon liquide","savon solide","pain de savon","déodorant femme","deo femme","déo femme","coloration","coloration cheveux","teinture cheveux","henné","décoloration","balayage","mèches"],"produits":["Gel douche fleurs","Gel douche hydratant","Gel douche exfoliant","Gel douche surgras","Savon liquide","Savon solide","Savon surgras","Pain de savon","Déodorant femme bille","Déodorant femme spray","Déodorant femme stick","Déodorant invisible","Coloration permanente","Coloration semi-permanente","Balayage","Henné","Décoloration","Kit coloration"]},
+"parfumerie-2":{"titre":"🦷 Shampoing, Coiffage & Dentifrice","desc":"Shampoing, après-shampoing, produits de fixation cheveux, dentifrice et crème solaire.","marques":["Pantene","Head & Shoulders","Elsève","Elvive","Syoss","Herbal Essences","Timotei","Garnier Fructis","Ultra Doux","TRESemmé","Alberto Balsam","Wash & Go","VO5","Klorane","René Furterer","Aussie","OGX","Schwarzkopf","Lee Stafford","Elnett","Taft","Colgate","Signal","Oral-B","Aquafresh","Sensodyne","Elmex","Elgydium","Parodontax","Listerine","Scope","GUM","Meridol","Biotene","Ambre Solaire","Nivea Sun","Hawaiian Tropic","Banana Boat"],"synonymes":["shampoing","shampoo","shampooing","après-shampoing","apres-shampoing","après shampoing","masque cheveux","soin cheveux","laque","gel coiffant","mousse coiffante","spray fixant","fixation cheveux","brushing","dentifrice","brosse à dents","bain de bouche","fil dentaire","crème solaire","spf","solaire","protection solaire","après-soleil"],"produits":["Shampoing cheveux normaux","Shampoing cheveux gras","Shampoing cheveux secs","Shampoing colorés","Shampoing sec","Après-shampoing","Masque cheveux","Sérum capillaire","Huile capillaire","Laque","Gel coiffant","Mousse coiffante","Spray fixant","Cire coiffante","Dentifrice","Dentifrice blancheur","Dentifrice sensible","Brosse à dents","Brosse à dents électrique","Fil dentaire","Bain de bouche","Blanchissant dentaire","Crème solaire SPF 30","Crème solaire SPF 50","Spray solaire","Stick solaire","Après-soleil"]},
+"parfumerie-3":{"titre":"👨 Hygiène Homme & Accessoires","desc":"Hygiène et rasage homme, coton-tige, pharmacie, protection sexuelle et accessoires cheveux.","marques":["Axe","Lynx","Old Spice","Narta","Mennen","Speed Stick","Gillette","Gillette Mach3","Gillette Fusion5","Venus","Wilkinson","Schick","BIC","Nivea Men","L'Oréal Men Expert","Durex","Manix","Billy Boy","Control","Hansaplast","Urgo","Bepanthène","Johnson's"],"synonymes":["déodorant homme","deo homme","rasoir homme","rasoir","lame rasoir","gel rasage","mousse rasage","crème rasage","après-rasage","après rasage","gel douche homme","coton-tige","coton tige","pharmacie","parapharmacie","préservatif","préservatifs","capote","condom","protection sexuelle","accessoires cheveux","pince cheveux","brosse cheveux","élastique cheveux","chouchou","serre-tête"],"produits":["Déodorant homme spray","Déodorant homme stick","Déodorant homme bille","Gel douche homme","Gel à raser","Mousse à raser","Crème à raser","Après-rasage","Rasoir jetable homme","Rasoir rechargeable homme","Lame de rasoir","Coton-tige","Coton-tige bambou","Boîte coton-tige","Préservatif","Préservatif lubrifié","Lubrifiant intime","Protection sexuelle","Pince à cheveux","Brosse à cheveux","Peigne","Élastiques cheveux","Chouchou","Serre-tête","Barrettes","Paracétamol","Ibuprofène","Aspirine","Antidouleur","Médicaments sans ordonnance"]},
+"parfumerie-4":{"titre":"💄 Maquillage & Protections Féminines","desc":"Maquillage L'Oréal, Maybelline, Miss Ben et protections hygiéniques féminines.","marques":["L'Oréal Paris","Maybelline","Miss Ben","Gemey","Rimmel","Bourjois","NYX","Revlon","Catrice","Essence","Nana","Always","Tampax","Carefree","Vania","Evax","Ob","Nett","Lotus"],"synonymes":["mascara","fond de teint","rouge à lèvres","gloss","eyeliner","fard à paupières","fard","blush","correcteur","anticernes","maquillage","make-up","makeup","palette maquillage","serviette hygiénique","serviettes hygiéniques","tampon","tampons","protège-slip","protège-slips","protection féminine","protections féminines","coton démaquillant","lingette"],"produits":["Mascara","Mascara volume","Fond de teint","Crème BB","Rouge à lèvres","Gloss","Eyeliner liquide","Fard à paupières","Palette ombres","Blush","Bronzer","Correcteur","Anticernes","Serviettes hygiéniques normales","Serviettes hygiéniques nuit","Serviettes avec ailettes","Tampons normaux","Tampons super","Protège-slips","Cotons démaquillants","Lingettes démaquillantes"]},
+"parfumerie-5":{"titre":"✂️ Rasoir & Épilation Femme","desc":"Rasoirs femme, crèmes dépilatoires, cires et produits d'épilation cosmétiques.","marques":["Venus","Gillette Venus","BIC Soleil","Veet","Nair","Surgi-cream","Wilkinson Intuition","Schick Intuition"],"synonymes":["rasoir femme","dépilatoire","depilatoire","cire","bande cire","crème dépilatoire","creme depilatoire","wax","rasage femme","kit cire"],"produits":["Rasoir jetable femme","Rasoir rechargeable femme","Lame rechargeable femme","Crème dépilatoire","Crème dépilatoire jambes","Crème dépilatoire visage","Cire froide","Bande de cire","Kit de cire","Crème post-épilation"]},
+"parfumerie-6":{"titre":"🌿 Soins Hydratants & Bio","desc":"Crèmes hydratantes, huiles essentielles, baume à lèvres, eau micellaire, masques et soins de jour.","marques":["Nuxe","So'Bio Étic","So Bio","Garnier","Nivea","Neutrogena","Vichy","La Roche-Posay","Avène","Eucerin","Bioderma","CeraVe","Uriage","A-Derma","Eau Thermale Jonzac","Mixa","SVR","Ducray","Caudalie","Weleda","Cattier","Dr Hauschka","Aveeno","Cetaphil","Jergens","Vaseline","Bepanthen","E45","Simple Skincare"],"synonymes":["crème hydratante","creme hydratante","crème corps","huile corps","huile sèche","huile essentielle","baume à lèvres","baume levres","eau micellaire","micellair","masque visage","masque soin","soin de jour","soin jour","crème de jour","creme jour","so'bio","so bio","sérum","gommage","démaquillant","demaquillant"],"produits":["Crème hydratante visage","Crème de jour","Crème corps","Lait corps","Huile sèche corps","Huile essentielle","Baume à lèvres","Eau micellaire","Masque visage","Masque hydratant","Soin de jour","Sérum visage","Contour des yeux","Gommage visage","Démaquillant","Autobronzant","Lotion tonique","Brume hydratante"]},
+"parfumerie-7":{"titre":"🌙 Soins de Nuit & Maquillage Complet","desc":"Soins de nuit, crèmes anti-âge et maquillage complet (rouge à lèvres, fond de teint, vernis…).","marques":["L'Oréal Paris","Maybelline","Rimmel","Bourjois","NYX","Revlon","Max Factor","Catrice","Essence","e.l.f.","ELF","GOSH","IsaDora","Golden Rose","Barry M","Sleek","Essie","OPI","Sally Hansen","Mavala","Vichy","Filorga","Embryolisse","Dior","Chanel","Yves Saint Laurent"],"synonymes":["crème de nuit","creme nuit","soin de nuit","soin nuit","anti-rides","antirides","anti rides","sérum anti-âge","soin anti-âge","contour yeux","rouge à lèvres","rouges à lèvres","fond de teint","poudre","blush","fard","palette","vernis","vernis à ongles","dissolvant","crayon sourcils","sourcils","eyeliner","mascara","maquillage"],"produits":["Crème de nuit","Soin de nuit","Masque de nuit","Sérum anti-rides","Crème anti-âge","Soin contour des yeux","Crème liftante","Soin fermeté","Rouge à lèvres","Gloss","Fond de teint liquide","Fond de teint compact","Crème teintée","Poudre matifiante","Poudre libre","Blush","Bronzer","Fard à paupières","Palette ombres à paupières","Vernis à ongles","Vernis longue tenue","Dissolvant","Dissolvant sans acétone","Kit manucure","Crayon sourcils","Fard sourcils","Eyeliner liquide","Eyeliner crayon","Mascara waterproof","Palette maquillage complète","Coffret maquillage"]},
+"fromage-frais":{"titre":"🧀 Fromage Frais","desc":"Fromages à la coupe, fromages emballés et fromages frais.","marques":["La Vache qui rit","Babybel","Mini Babybel","Boursin","Kiri","Philadelphia","Chavroux","Tartare","Pâturages","Gervais","St Moret","Carré Frais","Bresse Bleu","Caprice des Dieux","Président","Entremont","Le Rustique","Île de France","Cœur de Lion","Leerdammer","Galbani","Santa Lucia","Grana Padano","Parmigiano Reggiano","Société","Roquefort Société","Papillon","Soignon","Picandine","Crottin de Chavignol","Camembert Président","Le Châtelain","Isigny Camembert","Coulommiers Rouzaire","Brie Dongé","Graindorge","J.Gillot","Salakis","Burrata","Paysan Breton"],"synonymes":["fromage","fromages","camembert","brie","emmental","comté","gruyère","gruyere","raclette","fromage râpé","fromage rapé","mozzarella","parmesan","feta","roquefort","chèvre","chevre","fromage de chèvre","fromage blanc","yaourt"],"produits":["Camembert de Normandie","Brie de Meaux","Coulommiers","Chaource","Comté 6 mois","Comté 12 mois","Emmental","Gruyère","Beaufort","Raclette nature","Raclette fumée","Reblochon","Tome de Savoie","Morbier","Roquefort","Bleu d'Auvergne","Fourme d'Ambert","Gorgonzola","Saint-Nectaire","Cantal jeune","Cantal entre-deux","Chèvre bûche","Chèvre frais","Valençay","Sainte-Maure","Rocamadour","Fromage frais à tartiner","Fromage frais aux herbes","Mozzarella","Burrata","Ricotta","Mascarpone","Feta"]},
+"ultra-frais":{"titre":"🥛 Ultra Frais & Crémerie","desc":"Yaourts, desserts lactés, beurre, œufs et crème fraîche.","marques":["Danone","Activia","Actimel","Oikos","Fjord","Yoplait","Panier de Yoplait","Perle de Lait","Petit Filou","Sveltesse","Taillefine","Vrai","Les 2 Vaches","Malo","Nestlé","La Laitière","Gervais","Skyr Arla","Arla","Siggi's","Danette","Flanby","Mont Blanc","Bonne Maman Crème","Président","Elle & Vire","Isigny Sainte-Mère","Paysan Breton","Bridel","Candia","Lactel","Lurpak","Anchor","Kerrygold"],"synonymes":["yaourt","yaourts","yogourt","yoghurt","yo","yaourtière","skyr","fromage blanc","petit-suisse","petit suisse","faisselle","danone","activia","crème fraîche","beurre","margarine","oeufs","oeufs frais","tofu","Lait"],"produits":["Yaourt nature","Yaourt brassé","Yaourt à la grecque","Yaourt aromatisé fraise","Yaourt aromatisé vanille","Yaourt au bifidus","Fromage blanc 0%","Fromage blanc 20%","Fromage blanc 40%","Petit-suisse","Crème dessert chocolat","Crème dessert vanille","Flan","Riz au lait","Semoule au lait","Mousse au chocolat","Crème caramel","Crème fraîche épaisse","Crème fraîche liquide","Crème légère","Crème de soja","Lait entier","Lait demi-écrémé","Lait écrémé","Lait UHT","Lait de chèvre","Beurre doux","Beurre demi-sel","Beurre allégé","Margarine","Œufs calibre M x6","Œufs calibre L x6","Œufs x12","Œufs label rouge","Œufs bio"]},
+"surgeles":{"titre":"❄️ Surgelés","desc":"Plats cuisinés, pizzas, poissons, glaces et légumes surgelés.","marques":["Findus","Bonduelle Surgelés","Iglo","Ardo","Capitaine Iglo","La Cuisine d'Océane","Delpierre","Labeyrie Surgelés","McCain","Marie","Fleury Michon","Herta Surgelé","William Saurin","Knorr Surgelé","Dr. Oetker","Ristorante","Casa di Mama","Buitoni","Lustucru Surgelé","Giovanni Rana Surgelé","McCain Frites","Lamb Weston","Aviko","Häagen-Dazs","Ben & Jerry's","Carte d'Or","Mövenpick","Magnum","Cornetto","Solero","Twister","Calippo","Feast","Viennetta","La Laitière Glaces","Bridor","La Fournée Dorée","Neuhauser","Délifrance Surgelé"],"synonymes":["surgelé","surgelés","surgele","congelé","congele","pizza surgelée","frites","glace","crème glacée","glaces","sorbet","bâtonnet glacé","batonnets glace","viande surgelée","poisson surgelé","légumes surgelés"],"produits":["Pizza Margherita surgelée","Pizza reine surgelée","Pizza 4 fromages surgelée","Pizza bolognaise surgelée","Lasagnes bolognaise surgelées","Hachis Parmentier surgelé","Gratin dauphinois surgelé","Tartiflette surgelée","Frites surgelées","Pommes de terre sautées surgelées","Pommes noisettes","Röstis","Poisson pané surgelé","Filet de cabillaud surgelé","Crevette décortiquée surgelée","Noix de Saint-Jacques surgelée","Poulet rôti surgelé","Escalope de poulet panée","Nugget de poulet","Cordon bleu","Haricots verts surgelés","Petits pois surgelés","Épinards surgelés","Brocolis surgelés","Mélange de légumes","Edamame","Maïs épis surgelé","Butternut surgelé","Champignon surgelé","Glace vanille","Glace chocolat","Glace fraise","Sorbet citron","Sorbet framboise","Bâtonnet glacé","Glace premium","Glace artisanale","Croissant surgelé","Pain au chocolat surgelé","Baguette précuite"]},
+"epicerie-salee-1":{"titre":"🧂 Épicerie Salée — Condiments","desc":"Sauces, condiments, huiles, vinaigres et épices.","marques":["Amora","Maille","Heinz","Hellmann's","Benedicta","Thomy","Calvé","Tabasco","Kikkoman","Lee Kum Kee","Blue Dragon","Tiger Tiger","Sharwood's","Ducros","Schwartz","McCormick","Knorr","Maggi","Liebig","Royco","Maïzena","Alsa","Vahiné","Dr. Oetker","Mutti","Cirio","Elvea","San Marzano","Panzani Sauce","Barilla Sauce","Bertolli Sauce","Dolmio","Sacla","Puget","Lesieur","Carapelli","Bertolli","Borges","Filippo Berio","Francine","Gruau d'Or","Daddy","Béghin Say"],"synonymes":["sauce","sauces","ketchup","moutarde","mayonnaise","huile","vinaigre","épice","épices","epice","farine","sucre","sel","poivre","cornichon","olive","condiment","condiments","harissa","pesto","vinaigrette"],"produits":["Ketchup","Moutarde de Dijon","Moutarde à l'ancienne","Mayonnaise","Sauce tartare","Sauce barbecue","Sauce soja","Nuoc-mam","Sauce worcestershire","Sauce pimentée","Sauce forte","Harissa","Sambal","Huile d'olive extra vierge","Huile de tournesol","Huile de colza","Huile de sésame","Huile de noix","Vinaigre balsamique","Vinaigre de riz","Vinaigre de cidre","Vinaigre blanc","Cornichon","Câpre","Olive verte","Olive noire","Sel fin","Gros sel","Sel de Guérande","Poivre noir","Poivre blanc","Piment de Cayenne","Paprika doux","Paprika fumé","Cumin","Coriandre moulue","Curcuma","Cannelle","Gingembre en poudre","Herbes de Provence","Thym séché","Laurier","Basilic séché","Origan","Bouillon cube poulet","Bouillon cube bœuf","Bouillon cube légumes","Maïzena","Levure chimique","Bicarbonate de soude","Extrait de vanille","Pesto basilic","Sauce tomate","Coulis de tomates","Concentré de tomate","Vinaigrette"]},
+"epicerie-salee-2":{"titre":"🍝 Épicerie Salée — Féculents & Conserves","desc":"Pâtes, riz, semoule, lentilles, conserves, soupes et plats cuisinés.","marques":["Barilla","Panzani","De Cecco","Garofalo","Lustucru","Uncle Ben's","Tipiak","Vivien Paille","Gallo","William Saurin","d'aucy","Cassegrain","Bonduelle","Géant Vert","La Belle Chaurienne","Liebig","Royco","Knorr","Maggi","Saupiquet","Petit Navire","Rio Mare","La Belle-Iloise","Connétable","Mutti","Cirio","Elvea","San Marzano","Marie","Sodebo","Daunat"],"synonymes":["pâtes","pasta","spaghetti","spaghettis","rigatoni","penne","fusilli","tagliatelles","macaroni","riz","riz basmati","riz long","riz complet","riz rond","semoule","couscous","boulgour","quinoa","lentilles","lentille","pois chiches","pois chiche","haricots","haricots blancs","haricots verts","flageolets","conserve","conserves","boîte de conserve","boite de conserve","soupe","soupes","velouté","veloute","bouillon","purée","purée instantanée","plat préparé","plats préparés","plat cuisiné","plats cuisinés","cassoulet","ravioli","lasagnes","ratatouille","chili","thon","sardines","maquereau"],"produits":["Pâtes spaghetti","Pâtes penne","Pâtes fusilli","Pâtes tagliatelles","Pâtes rigatoni","Pâtes macaroni","Pâtes farfalle","Riz basmati","Riz long grain","Riz rond","Riz complet","Riz sauvage","Riz thaï","Semoule de blé fine","Semoule de blé moyenne","Couscous express","Boulgour","Lentilles vertes","Lentilles corail","Pois chiches en boîte","Haricots blancs","Haricots rouges","Flageolets","Thon en conserve","Sardines en conserve","Maquereau en conserve","Saumon en conserve","Haricots verts en conserve","Petits pois en conserve","Maïs en conserve","Tomates pelées","Coulis de tomates","Concentré de tomate","Soupe de tomate en brique","Soupe poireaux-pommes de terre","Velouté de butternut","Soupe miso","Ravioli en boîte","Cassoulet en conserve","Chili con carne","Ratatouille en conserve","Bœuf bourguignon","Purée en flocons","Purée instantanée","Polenta instantanée","Plat micro-ondable poulet riz","Plat micro-ondable pâtes","Plat micro-ondable curry"]},
+"produits-monde":{"titre":"🌍 Produits du Monde","desc":"Épicerie internationale : Asie, Mexique, Maghreb, Moyen-Orient et plus.","marques":["Kikkoman","Lee Kum Kee","Blue Dragon","Tiger Tiger","Sharwood's","Lobo","Mae Ploy","Chaokoh","Aroy-D","Nongshim","Nissin","Samyang","Shin Ramen","Indomie","Old El Paso","Santa Maria","Herdez","Cholula","La Morena","Goya","Mission","Al'Fez","Lesieur Cristal","Dar Assalam","Ziyad","Cedar's","Patak's","Kohinoor","TRS","MDH","Shan"],"synonymes":["produits monde","produits asiatiques","épicerie asiatique","épicerie mexicaine","épicerie maghreb","épicerie orientale","sauce soja","miso","curry","tortilla","couscous","harissa","tahini","houmous"],"produits":["Riz jasmin thaïlandais","Riz sushi japonais","Nouilles soba","Nouilles udon","Vermicelle de riz","Sauce soja","Sauce hoisin","Sauce huître","Miso","Wasabi","Gingembre mariné","Curry japonais","Curry thaï pâte verte","Curry thaï pâte rouge","Lait de coco","Ravioli chinois surgelé","Dim sum","Nem surgelé","Gyoza","Tortilla de maïs","Tortilla de blé","Chips de maïs","Guacamole","Salsa douce","Salsa piquante","Jalapeño en bocal","Haricot noir en boîte","Épice tex-mex","Sauce enchilada","Semoule fine","Couscous moyen","Harissa","Ras el-hanout","Zaatar","Tahini","Houmous","Pain pita","Pain lavash","Datte","Figue sèche","Abricot sec","Pistache","Viande halal","Merguez halal","Sauce piment antillais","Igname","Plantain","Fufu"]},
+"poissonnerie":{"titre":"🐟 Poissonnerie","desc":"Poissons frais entiers, filets, fruits de mer et crustacés à la coupe.","marques":["Saupiquet","Petit Navire","Rio Mare","La Belle-Iloise","Connétable","Ortiz","Labeyrie Saumon","Delpierre","Médithé"],"synonymes":["poisson","saumon","thon","cabillaud","sole","dorade","crevettes","moules","huîtres","huitres","langoustines","calamars","palourdes","noix de Saint-Jacques"],"produits":["Saumon entier frais","Filet de saumon","Pavé de saumon","Tranche de saumon fumé","Cabillaud entier","Filet de cabillaud","Dos de cabillaud","Lieu noir","Daurade royale entière","Filet de daurade","Bar entier","Filet de bar","Turbot","Sole entière","Filet de sole","Rouget barbet","Thon rouge frais","Maquereau frais","Merlan entier","Limande","Colin","Moules de bouchot","Moules d'Espagne","Moules cuites marinières","Huître n°2","Huître n°3","Huître n°4","Huître creuse","Huître plate","Crevette grise cuite","Crevette rose cuite","Gambas crues","Gambas cuites","Langoustine fraîche","Langouste fraîche","Homard breton vivant","Crabe tourteau cuit","Araignée de mer","Coquille Saint-Jacques fraîche","Noix de Saint-Jacques","Pétoncle","Palourde","Praire","Bulot cuit","Bigorneau cuit","Seiche fraîche","Calmar frais","Poulpe frais","Plateau de fruits de mer","Sashimi de saumon","Tartare de saumon"]},
+"chips-saucisson":{"titre":"🍟 Chips & Saucisson","desc":"Apéritifs, chips, saucissons secs et snacks salés en libre-service.","marques":["Pringles","Lay's","Lay's Max","Doritos","Belin","Curly","Chipster","Bugles","Vico","Brets","Tyrells","Tyrrells","Kettle","Terra Chips","Popchips","Takis","Tuc","Ritz","Wasa","Cochonou","Justin Bridou","Montagne Noire","Maxou","Coudène","Aoste","Madrange","Les Saucissons de Savoie","Paul Prédault","Seeberger","Wonderful Pistachios","Planters"],"synonymes":["saucisson","saucissons","chips","aperitif","apéritif","crackers","biscuits apéritif","rillettes","jambon sec","chorizo sec","rosette","salami","coppa","bresaola","cacahuete","noix","pistache","amande"],"produits":["Chips nature","Chips paprika","Chips fromage","Chips barbecue","Chips sel & vinaigre","Chips ondulées","Chips de maïs","Chips de légumes","Chips à la crème","Popcorn salé","Popcorn caramel","Popcorn sucré-salé","Cacahuète grillée","Cacahuète salée","Amande grillée","Noix de cajou","Pistache grillée","Noix mélangées","Mix apéritif","Biscuit apéritif","Saucisson sec de Lyon","Saucisson sec de montagne","Rosette","Salami","Chorizo doux sec","Chorizo fort sec","Saucisson à l'ail","Saucisson aux herbes","Mini saucisson apéritif","Saucisson bio","Coppa","Bresaola","Lonzo","Pancetta","Speck","Tuile apéritif","Bretzel","Gressin","Crackers apéritif","Cacahuète enrobée","Noix de macadamia","Noisette grillée"]},
+"boulangerie":{"titre":"🥖 Boulangerie","desc":"Pains frais, viennoiseries du jour et produits boulangers artisanaux.","marques":["Pasquier","Brioche Pasquier","Harry's","Jacquet","La Boulangère","La Fournée Dorée","Neuhauser","Bridor","Brossard","Délifrance","Ker Cadelac","Paul","Banette","Épi d'Or"],"synonymes":["baguette","baguettes","pain","pains","viennoiserie","viennoiseries","croissant","croissants","pain au chocolat","fougasse","ficelle","couronne","boule","bâtard","épi","pain de campagne","pain complet","pain céréales","pain aux graines","pain de seigle","pain hamburger","pain hot-dog","chausson","chausson aux pommes","pain aux raisins","pain suisse","kouglof","tarte boulangerie","éclair","brioche","brioches"],"produits":["Baguette tradition","Baguette classique","Baguette céréales","Baguette complète","Pain de campagne","Pain complet","Pain aux graines","Pain de seigle","Pain nordique","Pain aux noix","Pain aux olives","Pain aux lardons","Fougasse","Pain baguette précuit","Pain hamburger","Pain hot-dog","Croissant au beurre","Pain au chocolat","Chausson aux pommes","Pain aux raisins","Pain suisse","Tarte tropézienne","Kouglof","Financier frais","Cookie moelleux","Muffin","Éclair au chocolat","Éclair café","Chou à la crème","Religieuse","Tarte aux fruits frais","Tarte au citron meringuée","Tarte normande","Paris-Brest","Millefeuille","Opéra","Fraisier","Brioche tressée","Brioche Nanterre","Brioche individuelle","Brioche feuilletée"]},
+"boucherie":{"titre":"🥩 Boucherie","desc":"Viandes fraîches à la coupe, volailles et spécialités de boucherie.","marques":["Charal","Socopa","Bigard","Terrena","Elivia","LDC","Doux","Le Gaulois","Père Dodu","Maître Coq","Loué","Poulet de Bresse","Label Rouge Volaille","Maison Montfort","Labeyrie","Rougié","Delpeyrat","Comtesse du Barry","D'Artagnan","Périgord Tradition"],"synonymes":["viande","steak","bifteck","entrecôte","entrecote","côtelette","côte de bœuf","rôti bœuf","poulet","escalope","dinde","veau","agneau","porc","côtes"],"produits":["Bœuf haché 5% MG","Bœuf haché 15% MG","Bœuf haché 20% MG","Steak de bœuf","Entrecôte","Côte de bœuf","Rumsteck","Faux-filet","Onglet","Rôti de bœuf","Bœuf à braiser","Jarret de bœuf","Joue de bœuf","Côte de porc","Rôti de porc","Filet mignon de porc","Travers de porc","Palette de porc","Saucisse fraîche","Merguez fraîche","Chipolata","Saucisse de Toulouse","Andouillette","Escalope de veau","Côte de veau","Rôti de veau","Blanquette de veau","Osso-buco","Gigot d'agneau","Côtelette d'agneau","Épaule d'agneau","Souris d'agneau","Selle d'agneau","Poulet entier","Poulet fermier","Cuisse de poulet","Blanc de poulet","Aile de poulet","Pilon","Pintade entière","Magret de canard","Confit de canard","Foie de volaille","Gésier","Lapin entier","Lapin en morceaux","Brochette de bœuf","Brochette d'agneau","Brochette de poulet","Marinade barbecue","Viande halal bœuf","Poulet halal","Agneau halal"]}
+};
+
+// Fusionner les deux objets rayonData
+Object.assign(rayonData, rayonData2);
+
+
+function norm(s) { return s.toLowerCase() .normalize('NFD').replace(/[\u0300-\u036f]/g, '') .replace(/['\u2019\u02bc\-\s]/g, ''); }
+const allProducts = [], allBrands = [], allSynonyms = [];
+Object.entries(rayonData).forEach(([id, data]) => {
+  if (data.produits) data.produits.forEach(p => allProducts.push({ produit: p, id, titre: data.titre }));
+  if (data.marques) data.marques.forEach(m => allBrands.push({ marque: m, id, titre: data.titre, marqueN: norm(m) }));
+  if (data.synonymes) data.synonymes.forEach(s => allSynonyms.push({ terme: s, id, titre: data.titre, termeN: norm(s) }));
+});
+
+// MODAL
+const modal = document.getElementById('infoModal');
+const closeBtn = document.querySelector('.close-btn');
+const modalTitle = document.getElementById('modal-title');
+const modalDesc = document.getElementById('modal-desc');
+const modalProduits = document.getElementById('modal-produits');
+document.querySelectorAll('.rayon').forEach(el => {
+  el.addEventListener('click', function () {
+    const data = rayonData[this.dataset.id];
+    if (data) {
+      modalTitle.textContent = data.titre;
+      modalDesc.textContent = data.desc || '';
+      modalProduits.innerHTML = '';
+      (data.produits || []).forEach(p => {
+        const tag = document.createElement('span');
+        tag.className = 'produit-tag';
+        tag.textContent = p;
+        modalProduits.appendChild(tag);
+      });
+    } else {
+      modalTitle.textContent = this.textContent.trim();
+      modalDesc.textContent = 'Contenu détaillé à définir pour ce rayon.';
+      modalProduits.innerHTML = '';
+    }
+    modal.style.display = 'flex';
+  });
+});
+closeBtn.addEventListener('click', () => modal.style.display = 'none');
+window.addEventListener('click', e => { if (e.target === modal) modal.style.display = 'none'; });
+
+// RECHERCHE
+const searchInput = document.getElementById('searchInput');
+const searchClear = document.getElementById('searchClear');
+const searchResults = document.getElementById('searchResults');
+const autocompleteList = document.getElementById('autocompleteList');
+const extBoxes = [
+  { el: document.getElementById('pois-boucherie-ext-box'), ids: ['poissonnerie','boucherie'] },
+  { el: document.getElementById('boulangerie-chips-ext-box'), ids: ['boulangerie','chips-saucisson'] }
+];
+function resetHighlights() {
+  document.querySelectorAll('[data-id]').forEach(el => el.classList.remove('rayon-highlight','rayon-dim'));
+  extBoxes.forEach(({ el }) => el && el.classList.remove('ext-highlight','ext-dim'));
+}
+function applyHighlightIds(matchingIds) {
+  document.querySelectorAll('[data-id]').forEach(el => {
+    const hit = matchingIds.has(el.dataset.id);
+    el.classList.toggle('rayon-highlight', hit);
+    el.classList.toggle('rayon-dim', !hit);
+  });
+  extBoxes.forEach(({ el, ids }) => {
+    if (!el) return;
+    const hit = ids.some(id => matchingIds.has(id));
+    el.classList.toggle('ext-highlight', hit);
+    el.classList.toggle('ext-dim', !hit);
+  });
+  // Sur mobile zoomé : scroll vers le rayon trouvé pour le rendre visible
+  const _vv = window.visualViewport;
+  if (_vv && _vv.scale > 1.1 && matchingIds.size > 0) {
+    const firstId = [...matchingIds][0];
+    const target = document.querySelector('[data-id="' + firstId + '"]');
+    if (target) {
+      setTimeout(() => target.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' }), 150);
+    }
+  }
+}
+function updateCounter(count) {
+  if (count === 0) {
+      searchResults.textContent = '❌ Aucun résultat';
+    searchResults.style.color = '#dc2626';
+    searchResults.style.borderColor = '#fca5a5';
+  } else {
+    searchResults.textContent = `✅ ${count} rayon${count > 1 ? 's' : ''} trouvé${count > 1 ? 's' : ''}`;
+    searchResults.style.color = '#059669';
+    searchResults.style.borderColor = '#6ee7b7';
+  }
+}
+function resetZoom() {
+  // Le viewport est désormais device-width avec CSS transform sur le plan.
+  // Plus besoin de manipuler le viewport : on recalcule juste l'échelle
+  // après la fermeture du clavier (qui peut modifier innerWidth sur Android).
+  setTimeout(scalePlanForMobile, 350);
+}
+
+function doSearch(query) {
+  const q = query.trim().toLowerCase();
+  if (q.length < 2) {
+    resetHighlights();
+    searchResults.textContent = 'Tapez pour chercher';
+    searchResults.style.color = '#94a3b8';
+    searchResults.style.borderColor = '#e2e8f0';
+    searchClear.style.display = 'none';
+    return;
+  }
+  searchClear.style.display = 'flex';
+  const qn = norm(q);
+
+  // Priorité 1 : synonyme EXACT (ex: "lait" → uniquement Crémerie)
+  const exactSynIds = new Set();
+  Object.entries(rayonData).forEach(([id, data]) => {
+    if (data.synonymes && data.synonymes.some(s => norm(s) === qn))
+      exactSynIds.add(id);
+  });
+  if (exactSynIds.size > 0) {
+    applyHighlightIds(exactSynIds);
+    updateCounter(exactSynIds.size);
+    return;
+  }
+
+  // Priorité 2 : produit ou marque EXACT (nom de marque tapé tel quel)
+  const exactProdIds = new Set();
+  Object.entries(rayonData).forEach(([id, data]) => {
+    if (
+      (data.produits && data.produits.some(p => norm(p) === qn)) ||
+      (data.marques  && data.marques.some(m => norm(m) === qn))
+    ) exactProdIds.add(id);
+  });
+  if (exactProdIds.size > 0) {
+    applyHighlightIds(exactProdIds);
+    updateCounter(exactProdIds.size);
+    return;
+  }
+
+  // Priorité 3 : recherche large (inclus dans produits/marques/synonymes/titre/desc)
+  const matchingIds = new Set();
+  Object.entries(rayonData).forEach(([id, data]) => {
+    if (
+      (data.produits  && data.produits.some(p => norm(p).includes(qn))) ||
+      (data.marques   && data.marques.some(m => norm(m).includes(qn))) ||
+      (data.synonymes && data.synonymes.some(s => norm(s).includes(qn))) ||
+      (data.titre     && norm(data.titre).includes(qn)) ||
+      (data.desc      && norm(data.desc).includes(qn))
+    ) matchingIds.add(id);
+  });
+  applyHighlightIds(matchingIds);
+  updateCounter(matchingIds.size);
+}
+searchClear.addEventListener('click', () => {
+  searchInput.value = '';
+  doSearch('');
+  autocompleteList.style.display = 'none';
+  searchInput.focus();
+});
+
+function positionAutocomplete() {
+  const vv = window.visualViewport;
+  if (!vv) return;
+  const rect = document.querySelector('.search-box').getBoundingClientRect();
+  autocompleteList.style.left  = (vv.offsetLeft + 8) + 'px';
+  autocompleteList.style.top   = (rect.bottom + vv.offsetTop + 6) + 'px';
+  autocompleteList.style.width = (vv.width - 16) + 'px';
+  autocompleteList.style.right = 'auto';
+}
+function showAutocomplete(query) {
+  const q = query.trim().toLowerCase();
+  autocompleteList.innerHTML = '';
+  if (q.length < 2) { autocompleteList.style.display = 'none'; return; }
+  const qn = norm(q);
+  const candidates = [];
+  allBrands.forEach(b => {
+    const bl = b.marqueN;
+    if (!bl.includes(qn)) return;
+    const prio = bl === qn ? 4 : bl.startsWith(qn) ? 3 : 2;
+    candidates.push({ label: b.marque, id: b.id, titre: b.titre, prio });
+  });
+  allSynonyms.forEach(s => {
+    const sl = s.termeN;
+    if (!sl.includes(qn)) return;
+    const prio = sl === qn ? 3 : sl.startsWith(qn) ? 2 : 1;
+    candidates.push({ label: s.terme, id: s.id, titre: s.titre, prio });
+  });
+  allProducts.forEach(p => {
+    const pl = norm(p.produit);
+    if (!pl.includes(qn)) return;
+    const prio = pl === qn ? 2 : pl.startsWith(qn) ? 1 : 0;
+    candidates.push({ label: p.produit, id: p.id, titre: p.titre, prio });
+  });
+  const byLabel = new Map();
+  candidates.forEach(c => {
+    const key = c.label.toLowerCase();
+    if (!byLabel.has(key) || c.prio > byLabel.get(key).prio) byLabel.set(key, c);
+  });
+  const byRayon = new Map();
+  [...byLabel.values()].sort((a,b) => b.prio - a.prio || a.label.length - b.label.length)
+    .forEach(c => { if (!byRayon.has(c.id)) byRayon.set(c.id, c); });
+  const allMatches = [...byRayon.values()]
+    .sort((a,b) => b.prio - a.prio || a.label.localeCompare(b.label)).slice(0, 6);
+  if (!allMatches.length) { autocompleteList.style.display = 'none'; return; }
+  allMatches.forEach(m => {
+    const item = document.createElement('div');
+    item.className = 'autocomplete-item';
+    item.innerHTML = `<span>${m.label}</span><span class="autocomplete-rayon-label">${m.titre}</span>`;
+    item.addEventListener('mousedown', (ev) => {
+      ev.preventDefault(); // évite que le blur de searchInput cache l'autocomplete avant sélection
+      _searchFocusedAt = Date.now(); // bloque le ghost-click iOS sur openListeBtn (~300ms après)
+      searchInput.value = m.label;
+      autocompleteList.style.display = 'none';
+      doSearch(m.label);
+      searchInput.blur(); // ferme le clavier → déclenche le resize → resetZoom attend ça
+      resetZoom();
+    });
+    autocompleteList.appendChild(item);
+  });
+  positionAutocomplete();
+  autocompleteList.style.display = 'block';
+}
+
+
+searchInput.addEventListener('input', () => {
+  // Affiche les suggestions au fil de la frappe mais N'éclaire PAS le plan :
+  // sur mobile, doSearch() + scrollIntoView() ferait sauter la carte à chaque lettre.
+  showAutocomplete(searchInput.value);
+  // Réinitialise le surlignage si le champ est vidé
+  if (searchInput.value.trim().length < 2) {
+    resetHighlights();
+    searchResults.textContent = 'Tapez pour chercher';
+    searchResults.style.color = '#94a3b8';
+    searchResults.style.borderColor = '#e2e8f0';
+    searchClear.style.display = 'none';
+  } else {
+    searchClear.style.display = 'flex';
+  }
+});
+searchInput.addEventListener('keydown', e => {
+  if (e.key === 'Enter') { doSearch(searchInput.value); autocompleteList.style.display = 'none'; searchInput.blur(); resetZoom(); }
+});
+let _searchFocusedAt = 0;
+searchInput.addEventListener('focus', () => { _searchFocusedAt = Date.now(); showAutocomplete(searchInput.value); });
+searchInput.addEventListener('blur', () => setTimeout(() => { autocompleteList.style.display = 'none'; }, 160));
+
+// SCORING
+const specialRayons = {
+  'bebe-pgc': ['bébé','bebe','biberon','couche','tétine','nourrisson','lait 1','lait 2','lait 3'],
+  'textile-bebe': ['bébé','bebe','layette','grenouillère','gigoteuse','body bébé'],
+  'parfumerie': ['parfum','maquillage','rouge à lèvre','mascara','fond de teint'],
+  'parfumerie-1': ['gel douche','savon','déodorant femme','coloration'],
+  'parfumerie-2': ['shampoing','shampoo','dentifrice','solaire','laque','gel coiffant'],
+  'parfumerie-3': ['rasoir','déodorant homme','coton-tige','préservatif','homme'],
+  'parfumerie-4': ['maquillage','mascara','fond de teint','serviette hygiénique','tampon'],
+  'parfumerie-5': ['dépilatoire','rasoir femme','cire','bande cire','wax'],
+  'petit-electro': ['épilateur','appareil épilation','lumière pulsée','silk-épil'],
+  'parfumerie-6': ['crème hydratante','huile','baume à lèvres','eau micellaire','masque','soin de jour'],
+  'parfumerie-7': ['soin de nuit','crème de nuit','vernis','dissolvant','rouge à lèvres','eyeliner'],
+  'grignotage': ['chocolat','bonbon','confiserie','compote','gâteau moelleux','préparation gâteau','brownie','fondant'],
+  'grignotage-petit-dej':['biscuit','biscotte','galette','cookie','confiture','miel','pâte à tartiner','nutella'],
+  'the-cafe-cereales': ['café','thé','infusion','tisane','céréale','granola','muesli','flocon','nesquik','cacao'],
+  'petit-dej': ['madeleine','brioche','pain de mie','viennoiserie'],
+  'surgeles': ['surgelé','congelé','précuit','glacé','glace','sorbet','pizza surgelée','frites surgelées','poisson surgelé'],
+  'boulangerie': ['baguette','pain','croissant','viennoiserie','brioche fraîche','fougasse','chausson'],
+};
+function scoreMatch(produit, rayonId, query) {
+  const pl = produit.toLowerCase(), q = query.toLowerCase().trim();
+  let score = 0;
+  if (pl === q) score = 100;
+  else if (pl.startsWith(q + ' ') || pl === q) score = 60;
+  else if (pl.startsWith(q)) score = 50;
+  else if (pl.includes(' ' + q) || pl.includes(q + ' ')) score = 20;
+  else if (pl.includes(q)) score = 10;
+  else return 0;
+  const triggers = specialRayons[rayonId];
+  if (triggers && !triggers.some(t => q.includes(t))) score -= 40;
+  return score;
+}
+function findRayonForProduct(term) {
+  const qn = norm(term);
+  const synHit = allSynonyms.find(s => s.termeN === qn);
+  if (synHit) return { id: synHit.id, titre: synHit.titre };
+  const synPartial = allSynonyms.find(s => s.termeN.startsWith(qn + ' ') || s.termeN.startsWith(qn + '-'));
+  if (synPartial) return { id: synPartial.id, titre: synPartial.titre };
+  const brandHit = allBrands.find(b => b.marqueN === qn);
+  if (brandHit) return { id: brandHit.id, titre: brandHit.titre };
+  const brandPartial = allBrands.find(b => qn.startsWith(b.marqueN));
+  if (brandPartial) return { id: brandPartial.id, titre: brandPartial.titre };
+  const q = term.toLowerCase().trim();
+  let best = null, bestScore = 30;
+  Object.entries(rayonData).forEach(([id, data]) => {
+    if (!data.produits) return;
+    const hasSynBonus = data.synonymes && data.synonymes.some(s => norm(s).startsWith(qn) || qn.startsWith(norm(s) + ''));
+    data.produits.forEach(p => {
+      let s = scoreMatch(p, id, q);
+      if (hasSynBonus) s += 20;
+      if (s > bestScore) { bestScore = s; best = { id, titre: data.titre }; }
+    });
+  });
+  return best;
+}
+function getListeSuggestions(query, n = 8) {
+  const qn = norm(query);
+  if (qn.length < 2) return [];
+  const results = [], seen = new Set();
+  allSynonyms.forEach(s => {
+    const sl = s.termeN;
+    if (!sl.includes(qn) || seen.has(sl)) return;
+    seen.add(sl);
+    const score = sl === qn ? 500 : (sl.startsWith(qn + ' ') || sl.startsWith(qn + '-') || sl === qn) ? 400 : sl.startsWith(qn) ? 380 : 300;
+    results.push({ produit: s.terme, id: s.id, titre: s.titre, score, isBrand: false, isSynonym: true });
+  });
+  allBrands.forEach(b => {
+    const bl = b.marqueN;
+    if (!(bl === qn || bl.startsWith(qn + ' ') || bl.startsWith(qn + '-')) || seen.has(bl)) return;
+    seen.add(bl);
+    const score = bl === qn ? 250 : bl.startsWith(qn) ? 200 : 150;
+    results.push({ produit: b.marque, id: b.id, titre: b.titre, score, isBrand: true });
+  });
+  const q = query.toLowerCase().trim();
+  Object.entries(rayonData).forEach(([id, data]) => {
+    if (!data.produits) return;
+    data.produits.forEach(p => {
+      const s = scoreMatch(p, id, q);
+      if (s > 0 && !seen.has(p.toLowerCase())) {
+        seen.add(p.toLowerCase());
+        results.push({ produit: p, id, titre: data.titre, score: s, isBrand: false });
+      }
+    });
+  });
+  return results.sort((a, b) => b.score - a.score).slice(0, n);
+}
+
+// LISTE DE COURSES
+
+const listePanel = document.getElementById('listePanel');
+const listeClose = document.getElementById('listeClose');
+const listeInput = document.getElementById('listeInput');
+const listeAdd = document.getElementById('listeAdd');
+const listeItems = document.getElementById('listeItems');
+const listeEmpty = document.getElementById('listeEmpty');
+const listeClear = document.getElementById('listeClear');
+const listeAutoEl = document.getElementById('listeAutocomplete');
+let coursesList = JSON.parse(localStorage.getItem('carrefour_liste') || '[]');
+let listeAcSelected = -1;
+
+function saveListe() { localStorage.setItem('carrefour_liste', JSON.stringify(coursesList)); }
+
+
+listeClose.addEventListener('click', () => {
+  listePanel.classList.remove('open');
+  document.getElementById('listePanelOverlay').classList.remove('open');
+});
+// Protection ghost click iOS — un tap réel génère toujours un touchstart sur le bouton ;
+// un ghost click (tap fantôme après fermeture de l'autocomplete) n'en génère pas.
+const openListeBtn = document.getElementById('openListeBtn');
+let _btnLastTouch = 0;
+openListeBtn.addEventListener('touchstart', () => { _btnLastTouch = Date.now(); }, { passive: true });
+openListeBtn.addEventListener('click', () => {
+  // Sur appareil tactile : si aucun touchstart récent (<400ms) sur CE bouton → ghost click, on ignore
+  if (navigator.maxTouchPoints > 0 && Date.now() - _btnLastTouch > 400) return;
+  listePanel.classList.add('open');
+  document.getElementById('listePanelOverlay').classList.add('open');
+  syncPanelToViewport();
+});
+
+function showListeAc(query) {
+  const suggs = getListeSuggestions(query);
+  listeAutoEl.innerHTML = '';
+  listeAcSelected = -1;
+  if (!suggs.length) { listeAutoEl.style.display = 'none'; return; }
+  suggs.forEach((s, i) => {
+    const div = document.createElement('div');
+    div.className = 'liste-ac-item';
+    const label = s.isBrand ? `🏷️ ${s.produit}` : s.produit;
+    div.innerHTML = `<span class="liste-ac-nom">${label}</span><span class="liste-ac-rayon">${s.titre}</span>`;
+    div.addEventListener('mousedown', e => { e.preventDefault(); addToListeFromSuggestion(s); });
+    listeAutoEl.appendChild(div);
+  });
+  listeAutoEl.style.display = 'block';
+}
+function hideListeAc() { listeAutoEl.style.display = 'none'; listeAcSelected = -1; }
+
+function renderListe() {
+  listeItems.querySelectorAll('.liste-item').forEach(el => el.remove());
+  const remaining = coursesList.filter(i => !i.checked).length;
+  if (!coursesList.length) {
+    listeEmpty.style.display = 'block';
+  } else {
+    listeEmpty.style.display = 'none';
+    coursesList.forEach((item, idx) => {
+      const qty = item.qty || 1;
+      const div = document.createElement('div');
+      div.className = 'liste-item' + (item.checked ? ' checked' : '');
+      div.innerHTML =
+        '<div class="swipe-delete-bg">\uD83D\uDDD1\uFE0F Supprimer</div>' +
+        '<div class="liste-item-inner">' +
+          '<input type="checkbox"' + (item.checked ? ' checked' : '') + '>' +
+          '<div class="item-text">' +
+            '<div class="item-nom">' + item.nom + '</div>' +
+            '<div class="item-rayon">' + (item.rayon ? '\uD83D\uDCCD ' + item.rayon : '\u2753 Rayon non trouv\u00e9') + '</div>' +
+          '</div>' +
+          '<div class="item-qty">' +
+            '<button class="qty-btn qty-minus">\u2212</button>' +
+            '<span class="qty-val">' + qty + '</span>' +
+            '<button class="qty-btn qty-plus">+</button>' +
+          '</div>' +
+          '<button class="item-del" title="Supprimer">\u2715</button>' +
+        '</div>';
+      div.querySelector('input').addEventListener('change', () => {
+        coursesList[idx].checked = !coursesList[idx].checked;
+        if (navigator.vibrate) navigator.vibrate(20);
+        saveListe(); renderListe();
+      });
+      div.querySelector('.item-del').addEventListener('click', e => {
+        e.stopPropagation();
+        coursesList.splice(idx, 1);
+        saveListe(); renderListe();
+      });
+      div.querySelector('.qty-minus').addEventListener('click', e => {
+        e.stopPropagation();
+        if (coursesList[idx].qty > 1) { coursesList[idx].qty--; saveListe(); renderListe(); }
+      });
+      div.querySelector('.qty-plus').addEventListener('click', e => {
+        e.stopPropagation();
+        coursesList[idx].qty = (coursesList[idx].qty || 1) + 1;
+        saveListe(); renderListe();
+      });
+      div.addEventListener('click', e => {
+        if (e.target.tagName === 'INPUT' || e.target.classList.contains('qty-btn') || e.target.tagName === 'BUTTON') return;
+        if (item.rayonId) {
+          resetHighlights();
+          applyHighlightIds(new Set([item.rayonId]));
+          listePanel.classList.remove('open');
+          document.getElementById('listePanelOverlay').classList.remove('open');
+        }
+      });
+      addSwipeToDelete(div, idx);
+      listeItems.appendChild(div);
+    });
+  }
+}
+
+function addSwipeToDelete(el, idx) {
+  const inner = el.querySelector('.liste-item-inner');
+  const bg    = el.querySelector('.swipe-delete-bg');
+  let startX = 0, currentX = 0, dragging = false;
+  const THRESHOLD = 80;
+  el.addEventListener('touchstart', function(e) {
+    startX = e.touches[0].clientX; dragging = true;
+    inner.style.transition = 'none';
+  }, { passive: true });
+  el.addEventListener('touchmove', function(e) {
+    if (!dragging) return;
+    currentX = e.touches[0].clientX - startX;
+    if (currentX < 0) {
+      inner.style.transform = 'translateX(' + currentX + 'px)';
+      bg.style.opacity = String(Math.min(1, Math.abs(currentX) / THRESHOLD));
+    }
+  }, { passive: true });
+  el.addEventListener('touchend', function() {
+    dragging = false;
+    inner.style.transition = 'transform 0.2s ease';
+    if (currentX < -THRESHOLD) {
+      inner.style.transform = 'translateX(-100%)';
+      bg.style.opacity = '1';
+      setTimeout(function() {
+        if (navigator.vibrate) navigator.vibrate([20, 10, 20]);
+        coursesList.splice(idx, 1);
+        saveListe(); renderListe();
+      }, 220);
+    } else {
+      inner.style.transform = 'translateX(0)';
+      bg.style.opacity = '0';
+    }
+    currentX = 0;
+  });
+}
+
+function addToListeFromSuggestion(s) {
+  coursesList.push({ nom: s.produit, rayonId: s.id, rayon: s.titre, checked: false, qty: 1 });
+  if (navigator.vibrate) navigator.vibrate(30); // Amélioration 7
+  saveListe(); listeInput.value = ''; hideListeAc(); renderListe();
+  if (parcoursMode) renderParcours();
+}
+function addToListe(nom) {
+  nom = nom.trim();
+  if (!nom) return;
+  const items = listeAutoEl.querySelectorAll('.liste-ac-item');
+  if (listeAcSelected >= 0 && items[listeAcSelected]) {
+    const suggs = getListeSuggestions(nom);
+    if (suggs[listeAcSelected]) { addToListeFromSuggestion(suggs[listeAcSelected]); return; }
+  }
+  const suggs = getListeSuggestions(nom, 1);
+  const found = suggs.length ? { id: suggs[0].id, titre: suggs[0].titre } : findRayonForProduct(nom);
+  const nomFinal = (suggs.length && suggs[0].score >= 50) ? suggs[0].produit : nom;
+  coursesList.push({ nom: nomFinal, rayonId: found ? found.id : null, rayon: found ? found.titre : null, checked: false, qty: 1 });
+  if (navigator.vibrate) navigator.vibrate(30); // Amélioration 7
+  saveListe(); renderListe();
+  if (parcoursMode) renderParcours();
+  listeInput.value = ''; hideListeAc();
+}
+listeAdd.addEventListener('click', () => addToListe(listeInput.value));
+listeInput.addEventListener('keydown', e => {
+  const items = listeAutoEl.querySelectorAll('.liste-ac-item');
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    listeAcSelected = Math.min(listeAcSelected + 1, items.length - 1);
+    items.forEach((el, i) => el.classList.toggle('active', i === listeAcSelected));
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    listeAcSelected = Math.max(listeAcSelected - 1, -1);
+    items.forEach((el, i) => el.classList.toggle('active', i === listeAcSelected));
+  } else if (e.key === 'Enter') {
+    addToListe(listeInput.value);
+    // Touche Entrée/Valider du clavier mobile → active Mon Parcours directement
+    if (!parcoursMode) {
+      parcoursMode = true;
+      listeParcoursBtn.textContent = '📋 Ma Liste';
+      listeParcoursBtn.classList.add('active');
+      listeItems.style.display = 'none';
+      parcoursView.style.display = 'flex';
+      listePanel.classList.add('parcours-side');
+      document.getElementById('listePanelOverlay').classList.remove('open');
+      syncPanelToViewport();
+      stepsDone = [];
+      renderParcours();
+    } else {
+      renderParcours();
+    }
+  } else if (e.key === 'Escape') {
+    hideListeAc();
+  }
+});
+listeInput.addEventListener('input', () => showListeAc(listeInput.value));
+listeInput.addEventListener('focus', () => { if (listeInput.value.length >= 2) showListeAc(listeInput.value); });
+listeInput.addEventListener('blur', () => setTimeout(hideListeAc, 180));
+document.getElementById('listePanelOverlay').addEventListener('click', () => {
+  listePanel.classList.remove('open');
+  document.getElementById('listePanelOverlay').classList.remove('open');
+});
+function doViderListe() {
+  coursesList = []; saveListe(); renderListe();
+  resetHighlights();
+  if (parcoursMode) {
+    parcoursMode = false;
+    listeParcoursBtn.textContent = '🗺️ Mon Parcours';
+    listeParcoursBtn.classList.remove('active');
+    listeItems.style.display = 'flex';
+    parcoursView.style.display = 'none';
+    listePanel.classList.remove('parcours-side');
+    document.getElementById('listePanelOverlay').classList.add('open');
+    syncPanelToViewport();
+  }
+}
+listeClear.addEventListener('click', () => {
+  if (!coursesList.length) return;
+  document.getElementById('confirmModal').classList.add('open');
+});
+document.getElementById('confirmCancel').addEventListener('click', () => {
+  document.getElementById('confirmModal').classList.remove('open');
+});
+document.getElementById('confirmOk').addEventListener('click', () => {
+  document.getElementById('confirmModal').classList.remove('open');
+  doViderListe();
+});
+
+// PARCOURS
+const parcoursOrder = [
+  "textile-bebe","bebe-pgc","enfant","homme","femme","maison-blanc","maison","auto","brico",
+  "boulangerie","cave","alcools","biere","chips-gateaux","chips-saucisson","boisson","eaux","petit-dej",
+  "bio-diet","bio","charcuterie-traiteur","sushi-wok","frais-local",
+  "poissonnerie","boucherie","grignotage","grignotage-petit-dej","the-cafe-cereales",
+  "animalerie","droguerie-brosserie","droguerie",
+  "parfumerie-1","parfumerie-2","parfumerie-3","parfumerie-4","parfumerie-5","parfumerie-6","parfumerie-7",
+  "fromage-frais","ultra-frais","surgeles",
+  "epicerie-salee-1","epicerie-salee-2","produits-monde",
+  "ilots","saisonnier","papeterie","jouet","culture","culture-2","livres-culture",
+  "bagage-sport","petit-electro","media"
+];
+const listeParcoursBtn = document.getElementById('listeParcoursBtn');
+const parcoursView = document.getElementById('parcoursView');
+const parcoursSteps = document.getElementById('parcoursSteps');
+let parcoursMode = false, stepsDone = [];
+
+function buildParcours() {
+  const byRayon = {};
+  coursesList.forEach(item => {
+    if (!item.rayonId) return;
+    if (!byRayon[item.rayonId]) byRayon[item.rayonId] = { titre: item.rayon, items: [] };
+    byRayon[item.rayonId].items.push(item.nom);
+  });
+  const ordered = parcoursOrder.filter(id => byRayon[id]).map(id => ({ id, ...byRayon[id] }));
+  Object.keys(byRayon).forEach(id => { if (!parcoursOrder.includes(id)) ordered.push({ id, ...byRayon[id] }); });
+  return ordered;
+}
+function renderParcours() {
+  parcoursSteps.innerHTML = '';
+  const steps = buildParcours();
+  if (!steps.length) {
+    parcoursSteps.innerHTML = '<div style="text-align:center;color:#94a3b8;padding:20px;font-size:0.9em;">Ajoutez des produits à<br>votre liste pour voir<br>votre parcours !</div>';
+    return;
+  }
+  steps.forEach((step, i) => {
+    const div = document.createElement('div');
+    const done = stepsDone.includes(step.id);
+    div.className = 'parcours-step' + (done ? ' done' : '');
+    div.innerHTML = `<div class="parcours-num">${done ? '✓' : i + 1}</div><div><div class="parcours-rayon">${step.titre}</div><div class="parcours-items">${step.items.join(' · ')}</div></div>`;
+    div.addEventListener('click', () => {
+      stepsDone = done ? stepsDone.filter(x => x !== step.id) : [...stepsDone, step.id];
+      renderParcours();
+      applyHighlightIds(new Set([step.id]));
+      listePanel.classList.remove('open');
+      document.getElementById('listePanelOverlay').classList.remove('open');
+    });
+    parcoursSteps.appendChild(div);
+  });
+  applyHighlightIds(new Set(steps.map(s => s.id)));
+}
+listeParcoursBtn.addEventListener('click', () => {
+  parcoursMode = !parcoursMode;
+  if (parcoursMode) {
+    listeParcoursBtn.textContent = '📋 Ma Liste';
+    listeParcoursBtn.classList.add('active');
+    listeItems.style.display = 'none';
+    parcoursView.style.display = 'flex';
+    listePanel.classList.add('parcours-side');
+    document.getElementById('listePanelOverlay').classList.remove('open');
+    syncPanelToViewport();
+    stepsDone = [];
+    renderParcours();
+  } else {
+    listeParcoursBtn.textContent = '🗺️ Mon Parcours';
+    listeParcoursBtn.classList.remove('active');
+    listeItems.style.display = 'flex';
+    parcoursView.style.display = 'none';
+    listePanel.classList.remove('parcours-side');
+    document.getElementById('listePanelOverlay').classList.add('open');
+    syncPanelToViewport();
+    resetHighlights();
+  }
+});
+
+
+// ZOOM MOBILE — scale le plan pour qu'il rentre dans l'écran sans scroller,
+// en incluant les encarts qui dépassent à gauche (-68px) et à droite (-155px).
+function scalePlanForMobile() {
+  const el = document.querySelector('.magasin-container');
+  if (!el) return;
+  const vw = window.innerWidth;
+  if (vw >= 960) {
+    el.style.transform = '';
+    el.style.marginBottom = '';
+    el.style.marginLeft = '';
+    return;
+  }
+  // Réinitialiser avant mesure
+  el.style.transform = 'none';
+  el.style.marginBottom = '';
+  el.style.marginLeft = '';
+  const naturalH = el.offsetHeight;
+
+  // Largeur totale à faire rentrer :
+  //   68px (encarts boulangerie/boucherie à gauche)
+  // + 908px (container + bordures)
+  // + 155px (entrée principale à droite)
+  // = 1131px
+  const leftOverhang  = 68;
+  const planWidth     = 908;
+  const rightOverhang = 155;
+  const totalWidth    = leftOverhang + planWidth + rightOverhang; // 1131
+
+  const bodyPad = 6; // padding-left/right du body sur mobile
+  const scale   = (vw - bodyPad * 2) / totalWidth;
+
+  // Décaler le container vers la droite = encarts gauche deviennent visibles
+  el.style.marginLeft   = (leftOverhang * scale) + 'px';
+  el.style.transform    = 'scale(' + scale + ')';
+  el.style.marginBottom = '-' + Math.round(naturalH * (1 - scale)) + 'px';
+}
+function positionAllExts() { /* Les encarts sont positionnés par CSS */ }
+function refreshLayout() { scalePlanForMobile(); positionAllExts(); }
+window.addEventListener('load', () => {
+  refreshLayout();
+  setTimeout(refreshLayout, 200);
+  setTimeout(refreshLayout, 600);
+  setTimeout(refreshLayout, 1500);
+});
+if (document.fonts) document.fonts.ready.then(refreshLayout);
+window.addEventListener('resize', refreshLayout);
+if (window.ResizeObserver) new ResizeObserver(refreshLayout).observe(document.querySelector('.gauche'));
+
+// VISUAL VIEWPORT — ancre le panneau sur la zone réellement visible
+// Le viewport est forcé à width=1000 pour le plan. Avec position:fixed,
+// le panneau suit le layout viewport (1000px) et non la fenêtre visible
+// après un zoom. visualViewport corrige ça en temps réel.
+function syncPanelToViewport() {
+  const vv = window.visualViewport;
+  if (!vv) return;
+  const vW   = Math.round(vv.width);
+  const vH   = Math.round(vv.height);
+  const vTop = Math.round(vv.offsetTop);   // décalage vertical du viewport visible
+  const vLeft= Math.round(vv.offsetLeft);  // décalage horizontal (zoom)
+  const isParcoursSide = listePanel.classList.contains('parcours-side');
+
+  // Calcul de la hauteur du panneau selon le mode
+  let panelH;
+  if (isParcoursSide) {
+    panelH = Math.max(140, Math.round(vH * 0.42));
+  } else {
+    panelH = Math.max(200, vH - 16);
+  }
+
+  // Ancrage au BAS du viewport visible :
+  // top = offsetTop + hauteurVisible - hauteurPanneau
+  // Cela positionne le bas du panneau juste au-dessus du clavier (ou en bas d'écran)
+  // sans dépendre du comportement variable de bottom:0 selon les OS/versions.
+  listePanel.style.top       = (vTop + vH - panelH) + 'px';
+  listePanel.style.bottom    = 'auto';
+  listePanel.style.height    = panelH + 'px';
+  listePanel.style.maxHeight = panelH + 'px';
+
+  // Largeur + position horizontale
+  if (isParcoursSide) {
+    const panelW = Math.min(180, Math.round(vW * 0.46));
+    listePanel.style.left  = (vLeft + vW - panelW) + 'px';
+    listePanel.style.width = panelW + 'px';
+  } else {
+    listePanel.style.left  = vLeft + 'px';
+    listePanel.style.width = vW + 'px';
+  }
+  listePanel.style.right = 'auto';
+}
+if (window.visualViewport) {
+  window.visualViewport.addEventListener('resize', syncPanelToViewport);
+  window.visualViewport.addEventListener('scroll', syncPanelToViewport);
+  window.visualViewport.addEventListener('scroll', () => { if (autocompleteList.style.display !== 'none') positionAutocomplete(); });
+  window.visualViewport.addEventListener('resize', () => { if (autocompleteList.style.display !== 'none') positionAutocomplete(); });
+  syncPanelToViewport();
+}
+
+// Init
+renderListe();
+
+// Amélioration 6 : Web Share API
+document.getElementById('listeShareBtn').addEventListener('click', async () => {
+  if (!coursesList.length) return;
+  const lines = coursesList.map(i => {
+    const qty = i.qty && i.qty > 1 ? `×${i.qty} ` : '';
+    return `${qty}${i.nom}${i.rayon ? ' (' + i.rayon + ')' : ''}`;
+  }).join('\n');
+  const text = `🛒 Ma liste Carrefour Laval :\n\n${lines}`;
+  if (navigator.share) {
+    try { await navigator.share({ title: 'Ma liste Carrefour Laval', text }); }
+    catch(e) { if (e.name !== 'AbortError') navigator.clipboard?.writeText(text); }
+  } else {
+    navigator.clipboard?.writeText(text).then(() => alert('Liste copiée dans le presse-papier !'));
+  }
+});
+
+
+// Amélioration 12 : Onboarding - déclenché manuellement via bouton ?
+document.getElementById('onboardingClose').addEventListener('click', () => {
+  document.getElementById('onboardingOverlay').classList.remove('open');
+  localStorage.setItem('carrefour_onboarding_seen', '1');
+});
+// Ouvrir uniquement si bouton aide cliqué
+var helpBtn = document.getElementById('helpBtn');
+if (helpBtn) {
+  helpBtn.addEventListener('click', function() {
+    document.getElementById('onboardingOverlay').classList.add('open');
+  });
+}
+
+// Amélioration 9 : PWA — enregistrement Service Worker
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  });
+}
+
+</script>
+</body>
+</html>
