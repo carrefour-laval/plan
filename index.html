@@ -232,7 +232,7 @@ body { font-family: 'Inter', system-ui, -apple-system, sans-serif; background-co
   .autocomplete-dropdown { border-radius: 16px; }
   .autocomplete-item { padding: 7px 12px; font-size: 0.8em; min-height: 36px; }
   .open-liste-btn { font-size: 0.76em; padding: 6px 12px; border-radius: 14px; margin-bottom: 6px; min-height: 34px; }
-  .search-wrapper { margin-bottom: 20px; }
+  .search-wrapper { margin-bottom: 8px; }
   .magasin-container { border-radius: 10px; }
   /* .entree-principale reste visible — incluse dans le calcul de scale JS */
   .header, .footer { font-size: 0.85em; padding: 10px 15px; }
@@ -1081,9 +1081,11 @@ openListeBtn.addEventListener('touchend', (e) => {
   e.preventDefault(); // annule le click natif iOS → supprime à la source le ghost click
   if (document.activeElement === searchInput) return;
   if (Date.now() - _searchFocusedAt < 900) return; // anti ghost-click / layout-shift iOS
-  if (parcoursMode) return; // en mode parcours, le bouton ne fait rien (évite les ouvertures accidentelles)
+  // Rouvrir le panel (mini si mode parcours, complet sinon)
   listePanel.classList.add('open');
-  document.getElementById('listePanelOverlay').classList.add('open');
+  if (!parcoursMode) {
+    document.getElementById('listePanelOverlay').classList.add('open');
+  }
   syncPanelToViewport();
 }, { passive: false });
 
@@ -1091,9 +1093,10 @@ openListeBtn.addEventListener('click', () => {
   // Sur mobile ce click n'arrive jamais (annulé par touchend+preventDefault ci-dessus)
   // Sur desktop (souris) il n'y a pas de touchend → ce click est légitime
   if ('ontouchstart' in window) return; // mobile : ignoré, déjà géré par touchend
-  if (parcoursMode) return;
   listePanel.classList.add('open');
-  document.getElementById('listePanelOverlay').classList.add('open');
+  if (!parcoursMode) {
+    document.getElementById('listePanelOverlay').classList.add('open');
+  }
   syncPanelToViewport();
 });
 
@@ -1466,7 +1469,14 @@ function syncPanelToViewport() {
   listePanel.style.right = 'auto';
 }
 if (window.visualViewport) {
-  window.visualViewport.addEventListener('resize', syncPanelToViewport);
+  window.visualViewport.addEventListener('resize', () => {
+    // Si le clavier vient de s'ouvrir (search active) → forcer la fermeture du panel
+    if (document.activeElement === searchInput && !parcoursMode) {
+      listePanel.classList.remove('open');
+      document.getElementById('listePanelOverlay').classList.remove('open');
+    }
+    syncPanelToViewport();
+  });
   window.visualViewport.addEventListener('scroll', syncPanelToViewport);
   window.visualViewport.addEventListener('scroll', () => { if (autocompleteList.style.display !== 'none') positionAutocomplete(); });
   window.visualViewport.addEventListener('resize', () => { if (autocompleteList.style.display !== 'none') positionAutocomplete(); });
@@ -1510,6 +1520,11 @@ if (helpBtn) {
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('sw.js').catch(() => {});
+  });
+  // Rechargement automatique quand un nouveau service worker prend le contrôle
+  // → la page recharge immédiatement avec le nouveau HTML (Network First)
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    window.location.reload();
   });
 }
 
