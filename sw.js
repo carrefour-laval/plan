@@ -1,6 +1,6 @@
 // Service Worker — Plan Carrefour Laval
 // Stratégie : Cache First pour les assets, puis réseau
-const CACHE_NAME = 'carrefour-plan-v1';
+const CACHE_NAME = 'carrefour-plan-v3';
 const ASSETS = [
   './',
   './index.html',
