@@ -424,14 +424,14 @@ body { font-family: 'Inter', system-ui, -apple-system, sans-serif; background-co
 .liste-panel.parcours-side .liste-clear-btn  { display: none !important; }
 .liste-panel.parcours-side .liste-header     { padding: 8px 10px 10px; }
 .liste-panel.parcours-side .liste-close-btn  { font-size: 1.2em; min-width: 36px; min-height: 36px; }
-.liste-panel.parcours-side .liste-footer     { padding: 8px 10px; }
-.liste-panel.parcours-side .liste-parcours-btn { font-size: 0.82em; padding: 10px 8px; min-height: 40px; width: 100%; }
-.liste-panel.parcours-side #parcoursView     { padding: 8px 10px; gap: 6px; }
-.liste-panel.parcours-side .parcours-step    { padding: 10px 8px; min-height: 44px; gap: 8px; border-radius: 10px; margin-bottom: 6px; }
-.liste-panel.parcours-side .parcours-num     { min-width: 24px; height: 24px; font-size: 0.75em; }
-.liste-panel.parcours-side .parcours-rayon   { font-size: 0.82em; }
-.liste-panel.parcours-side .parcours-items   { font-size: 0.73em; line-height: 1.4; }
-.liste-panel.parcours-side .parcours-progress-label { font-size: 0.72em; }
+.liste-panel.parcours-side .liste-footer     { padding: 5px 6px; }
+.liste-panel.parcours-side .liste-parcours-btn { font-size: 0.76em; padding: 7px 6px; min-height: 34px; width: 100%; }
+.liste-panel.parcours-side #parcoursView     { padding: 4px 6px; gap: 2px; }
+.liste-panel.parcours-side .parcours-step    { padding: 4px 6px; min-height: 28px; gap: 5px; border-radius: 8px; margin-bottom: 3px; }
+.liste-panel.parcours-side .parcours-num     { min-width: 18px; height: 18px; font-size: 0.64em; flex-shrink: 0; }
+.liste-panel.parcours-side .parcours-rayon   { font-size: 0.72em; }
+.liste-panel.parcours-side .parcours-items   { font-size: 0.62em; line-height: 1.2; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; max-width: 130px; }
+.liste-panel.parcours-side .parcours-progress-label { font-size: 0.65em; }
 
 
 </style>
@@ -1065,6 +1065,8 @@ const openListeBtn = document.getElementById('openListeBtn');
 openListeBtn.addEventListener('touchend', (e) => {
   e.preventDefault(); // annule le click natif iOS → supprime à la source le ghost click
   if (document.activeElement === searchInput) return;
+  if (parcoursMode) return; // en mode parcours, le bouton ne doit rien faire
+  if (Date.now() - _searchFocusedAt < 500) return; // anti ghost-click iOS : si search vient d'être focalisé, on ignore
   listePanel.classList.add('open');
   document.getElementById('listePanelOverlay').classList.add('open');
   syncPanelToViewport();
@@ -1074,6 +1076,7 @@ openListeBtn.addEventListener('click', () => {
   // Sur mobile ce click n'arrive jamais (annulé par touchend+preventDefault ci-dessus)
   // Sur desktop (souris) il n'y a pas de touchend → ce click est légitime
   if ('ontouchstart' in window) return; // mobile : ignoré, déjà géré par touchend
+  if (parcoursMode) return; // en mode parcours, le bouton ne doit rien faire
   listePanel.classList.add('open');
   document.getElementById('listePanelOverlay').classList.add('open');
   syncPanelToViewport();
@@ -1265,6 +1268,7 @@ function doViderListe() {
     parcoursView.style.display = 'none';
     listePanel.classList.remove('parcours-side');
     document.getElementById('listePanelOverlay').classList.add('open');
+    openListeBtn.style.display = ''; // réafficher le bouton
     syncPanelToViewport();
   }
 }
@@ -1341,6 +1345,7 @@ listeParcoursBtn.addEventListener('click', () => {
     parcoursView.style.display = 'flex';
     listePanel.classList.add('parcours-side');
     document.getElementById('listePanelOverlay').classList.remove('open');
+    openListeBtn.style.display = 'none'; // masquer le bouton en mode parcours pour éviter les faux-clics
     syncPanelToViewport();
     stepsDone = [];
     renderParcours();
@@ -1351,6 +1356,7 @@ listeParcoursBtn.addEventListener('click', () => {
     parcoursView.style.display = 'none';
     listePanel.classList.remove('parcours-side');
     document.getElementById('listePanelOverlay').classList.add('open');
+    openListeBtn.style.display = ''; // réafficher le bouton quand on sort du mode parcours
     syncPanelToViewport();
     resetHighlights();
   }
