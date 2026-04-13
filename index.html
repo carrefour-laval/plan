@@ -946,6 +946,13 @@ searchInput.addEventListener('keydown', e => {
   if (e.key === 'Enter') { doSearch(searchInput.value); autocompleteList.style.display = 'none'; searchInput.blur(); resetZoom(); }
 });
 let _searchFocusedAt = 0;
+// Bloquer openListeBtn dès le touchstart (avant le focus) — c'est le seul moment fiable sur iOS
+searchInput.addEventListener('touchstart', () => {
+  _searchFocusedAt = Date.now();
+  // Désactiver temporairement le bouton le temps que le clavier s'ouvre et que le layout se stabilise
+  openListeBtn.style.pointerEvents = 'none';
+  setTimeout(() => { openListeBtn.style.pointerEvents = ''; }, 1000);
+}, { passive: true });
 searchInput.addEventListener('focus', () => { _searchFocusedAt = Date.now(); showAutocomplete(searchInput.value); });
 searchInput.addEventListener('blur', () => setTimeout(() => { autocompleteList.style.display = 'none'; }, 160));
 
@@ -1065,18 +1072,25 @@ const openListeBtn = document.getElementById('openListeBtn');
 openListeBtn.addEventListener('touchend', (e) => {
   e.preventDefault(); // annule le click natif iOS → supprime à la source le ghost click
   if (document.activeElement === searchInput) return;
-  if (parcoursMode) return; // en mode parcours, le bouton ne doit rien faire
-  if (Date.now() - _searchFocusedAt < 500) return; // anti ghost-click iOS : si search vient d'être focalisé, on ignore
+  if (Date.now() - _searchFocusedAt < 900) return; // anti ghost-click / layout-shift iOS
+  if (parcoursMode) {
+    // En mode parcours : quitter le parcours et réouvrir le panel liste
+    listeParcoursBtn.click();
+    return;
+  }
   listePanel.classList.add('open');
   document.getElementById('listePanelOverlay').classList.add('open');
   syncPanelToViewport();
-}, { passive: false }); // passive:false obligatoire pour pouvoir appeler preventDefault
+}, { passive: false });
 
 openListeBtn.addEventListener('click', () => {
   // Sur mobile ce click n'arrive jamais (annulé par touchend+preventDefault ci-dessus)
   // Sur desktop (souris) il n'y a pas de touchend → ce click est légitime
   if ('ontouchstart' in window) return; // mobile : ignoré, déjà géré par touchend
-  if (parcoursMode) return; // en mode parcours, le bouton ne doit rien faire
+  if (parcoursMode) {
+    listeParcoursBtn.click();
+    return;
+  }
   listePanel.classList.add('open');
   document.getElementById('listePanelOverlay').classList.add('open');
   syncPanelToViewport();
@@ -1345,7 +1359,6 @@ listeParcoursBtn.addEventListener('click', () => {
     parcoursView.style.display = 'flex';
     listePanel.classList.add('parcours-side');
     document.getElementById('listePanelOverlay').classList.remove('open');
-    openListeBtn.style.display = 'none'; // masquer le bouton en mode parcours pour éviter les faux-clics
     syncPanelToViewport();
     stepsDone = [];
     renderParcours();
@@ -1356,7 +1369,6 @@ listeParcoursBtn.addEventListener('click', () => {
     parcoursView.style.display = 'none';
     listePanel.classList.remove('parcours-side');
     document.getElementById('listePanelOverlay').classList.add('open');
-    openListeBtn.style.display = ''; // réafficher le bouton quand on sort du mode parcours
     syncPanelToViewport();
     resetHighlights();
   }
