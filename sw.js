@@ -1,6 +1,6 @@
 // Service Worker — Plan Carrefour Laval
 // Stratégie : Network First pour HTML (toujours à jour), Cache First pour assets statiques
-const CACHE_NAME = 'carrefour-plan-v10';
+const CACHE_NAME = 'carrefour-plan-v11';
 const STATIC_ASSETS = [
   './rayons.js',
   './manifest.json',
