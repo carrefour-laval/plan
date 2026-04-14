@@ -4487,8 +4487,8 @@ const rayonData = {
     ]
   },
    "fromage-frais": {
-     titre: "🧀 Fromage Frais & Crémerie",
-    desc: "Fromages à la coupe, fromages emballés, fromages frais et produits de crémerie (crème fraîche, chantilly).",
+     titre: "🥛 Produits Laitiers",
+    desc: "Lait, œufs, fromages, crème fraîche, crème liquide et chantilly.",
     marques: [
        "La Vache qui rit",
       "Babybel",
@@ -4584,7 +4584,20 @@ const rayonData = {
       "crème légère",
       "chantilly",
       "crémerie",
-      "creme"
+      "creme",
+      "oeuf",
+      "oeufs",
+      "oeuf frais",
+      "oeufs frais",
+      "oeufs bio",
+      "boite d'oeufs",
+      "lait",
+      "lait entier",
+      "lait demi-écrémé",
+      "lait écrémé",
+      "lait uht",
+      "lait de chèvre",
+      "produits laitiers"
     ],
     produits: [
       "Camembert de Normandie",
@@ -4621,6 +4634,16 @@ const rayonData = {
       "Ricotta",
       "Mascarpone",
       "Feta",
+      "Lait entier",
+      "Lait demi-écrémé",
+      "Lait écrémé",
+      "Lait UHT",
+      "Lait de chèvre",
+      "Œufs calibre M x6",
+      "Œufs calibre L x6",
+      "Œufs x12",
+      "Œufs label rouge",
+      "Œufs bio",
       "Crème fraîche épaisse",
       "Crème fraîche liquide",
       "Crème légère",
@@ -4717,8 +4740,6 @@ const rayonData = {
       "kefir",
       "beurre",
       "margarine",
-      "oeufs",
-      "oeufs frais",
       "tofu"
     ],
     produits: [
@@ -4743,20 +4764,10 @@ const rayonData = {
       "Semoule au lait",
       "Mousse au chocolat",
       "Crème caramel",
-      "Lait entier",
-      "Lait demi-écrémé",
-      "Lait écrémé",
-      "Lait UHT",
-      "Lait de chèvre",
       "Beurre doux",
       "Beurre demi-sel",
       "Beurre allégé",
-      "Margarine",
-      "Œufs calibre M x6",
-      "Œufs calibre L x6",
-      "Œufs x12",
-      "Œufs label rouge",
-      "Œufs bio"
+      "Margarine"
     ]
   },
   "snacking": {
