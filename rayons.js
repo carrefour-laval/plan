@@ -412,6 +412,33 @@ const rayonData = {
       "Jeté de canapé"
     ]
   },
+  "chaussures": {
+    titre: "👟 Chaussures & Pantoufles",
+    desc: "Chaussures homme, femme, enfant et pantoufles pour toute la famille.",
+    marques: [
+      "Nike", "Adidas", "Puma", "New Balance", "Converse", "Vans",
+      "Birkenstock", "Crocs", "Scholl", "Clarks", "Skechers",
+      "Timberland", "UGG", "Havaianas", "Le Coq Sportif", "Reebok"
+    ],
+    synonymes: [
+      "chaussures", "chaussure", "basket", "baskets", "pantoufle",
+      "pantoufles", "chausson", "chaussons", "sandale", "sandales",
+      "botte", "bottes", "escarpin", "mocassin", "tennis", "sneakers",
+      "tong", "tongs", "claquettes", "sabots", "mules"
+    ],
+    produits: [
+      "Basket homme", "Basket femme", "Basket enfant",
+      "Sneakers homme", "Sneakers femme",
+      "Chaussure de ville homme", "Chaussure de ville femme",
+      "Chaussure de sport", "Sandale homme", "Sandale femme",
+      "Sandale enfant", "Tong", "Claquettes",
+      "Pantoufle homme", "Pantoufle femme",
+      "Chausson enfant", "Chausson bébé",
+      "Boot homme", "Boot femme", "Botte femme", "Bottine femme",
+      "Mocassin homme", "Escarpin femme", "Ballerine femme",
+      "Chaussure de randonnée", "Chaussure de running"
+    ]
+  },
    "femme": {
      titre: "👗 Textile Femme",
     desc: "Mode, lingerie, chaussures et accessoires pour femme.",
@@ -4460,8 +4487,8 @@ const rayonData = {
     ]
   },
    "fromage-frais": {
-     titre: "🧀 Fromage Frais",
-    desc: "Fromages à la coupe, fromages emballés et fromages frais.",
+     titre: "🧀 Fromage Frais & Crémerie",
+    desc: "Fromages à la coupe, fromages emballés, fromages frais et produits de crémerie (crème fraîche, chantilly).",
     marques: [
        "La Vache qui rit",
       "Babybel",
@@ -4549,8 +4576,15 @@ const rayonData = {
       "chèvre",
       "chevre",
       "fromage de chèvre",
-      "fromage blanc",
-      "yaourt"
+      "crème fraîche",
+      "creme fraiche",
+      "crème liquide",
+      "crème fleurette",
+      "crème entière",
+      "crème légère",
+      "chantilly",
+      "crémerie",
+      "creme"
     ],
     produits: [
       "Camembert de Normandie",
@@ -4586,12 +4620,20 @@ const rayonData = {
       "Burrata",
       "Ricotta",
       "Mascarpone",
-      "Feta"
+      "Feta",
+      "Crème fraîche épaisse",
+      "Crème fraîche liquide",
+      "Crème légère",
+      "Crème fleurette",
+      "Crème entière UHT",
+      "Crème de cuisson",
+      "Chantilly en bombe",
+      "Crème chantilly"
     ]
   },
   "ultra-frais": {
-     titre: "🥛 Ultra Frais & Crémerie",
-    desc: "Yaourts, desserts lactés, beurre, œufs et crème fraîche.",
+     titre: "🥛 Ultra Frais",
+    desc: "Yaourts, yaourts à boire, kéfir, beurre et œufs.",
     marques: [
        "Danone",
       "Activia",
@@ -4667,7 +4709,12 @@ const rayonData = {
       "faisselle",
       "danone",
       "activia",
-      "crème fraîche",
+      "actimel",
+      "yop",
+      "yaourt à boire",
+      "danette",
+      "kéfir",
+      "kefir",
       "beurre",
       "margarine",
       "oeufs",
@@ -4681,6 +4728,10 @@ const rayonData = {
       "Yaourt aromatisé fraise",
       "Yaourt aromatisé vanille",
       "Yaourt au bifidus",
+      "Yaourt à boire Yop",
+      "Yaourt à boire Actimel",
+      "Yaourt à boire Activia",
+      "Kéfir",
       "Fromage blanc 0%",
       "Fromage blanc 20%",
       "Fromage blanc 40%",
@@ -4692,10 +4743,6 @@ const rayonData = {
       "Semoule au lait",
       "Mousse au chocolat",
       "Crème caramel",
-      "Crème fraîche épaisse",
-      "Crème fraîche liquide",
-      "Crème légère",
-      "Crème de soja",
       "Lait entier",
       "Lait demi-écrémé",
       "Lait écrémé",
@@ -4710,6 +4757,30 @@ const rayonData = {
       "Œufs x12",
       "Œufs label rouge",
       "Œufs bio"
+    ]
+  },
+  "snacking": {
+    titre: "🥪 Snacking & Salades",
+    desc: "Sandwichs, salades composées, wraps et snacks prêts à emporter pour le déjeuner.",
+    marques: [
+      "Sodebo", "Daunat", "Florette", "Bonduelle Traiteur",
+      "Herta Snacking", "William Saurin", "Brossard"
+    ],
+    synonymes: [
+      "sandwich", "sandwichs", "sandwiches", "salade", "salades",
+      "salade composée", "wrap", "wraps", "snacking", "lunch",
+      "midi", "déjeuner", "repas rapide", "jambon fromage",
+      "poulet", "club", "caesar", "césar", "taboulé", "piémontaise"
+    ],
+    produits: [
+      "Sandwich jambon beurre", "Sandwich jambon fromage",
+      "Sandwich poulet crudités", "Club sandwich", "Sandwich thon",
+      "Wrap poulet", "Wrap saumon",
+      "Salade césar", "Salade niçoise", "Salade composée poulet",
+      "Salade de pâtes", "Taboulé", "Salade piémontaise",
+      "Salade du chef", "Box salade",
+      "Velouté de légumes", "Soupe à emporter",
+      "Jus de fruits format individuel", "Fruit coupé", "Salade de fruits"
     ]
   },
   "surgeles": {
